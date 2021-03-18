@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-// standard imports
-import Container from '@material-ui/core/Container'
-
 // component imports
 import NavBar from './navbar';
 
 // page imports
 import Home from './pages/home';
+import Login from './pages/login';
+import Register from './pages/register';
+
 
 const PageRouter = () => {
   
@@ -16,6 +16,12 @@ const PageRouter = () => {
     <Router>
       <NavBar />
       <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/register">
+          <Register />
+        </Route>
         <Route path="/">
           <Home />
         </Route>

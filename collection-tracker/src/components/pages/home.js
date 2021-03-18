@@ -32,11 +32,14 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "capitalize",
     color: "whitesmoke",
     textAlign : 'center',
+    fontSize: '4rem',
+    marginBottom : 0,
   },
   subtitle: {
-    fontSize: "18px",
+    fontSize: "1.5em",
     margin: "auto",
-    textTransform: "capitalize"
+    textTransform: "capitalize",
+    color: 'white',
   }
 }));
 

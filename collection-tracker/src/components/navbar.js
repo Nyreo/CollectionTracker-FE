@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -23,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
   },
   grow: {
     flexGrow: 1,
+  },
+  link: {
+    textDecoration: 'none',
+    color: 'whitesmoke',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -177,7 +183,9 @@ export default function PrimarySearchAppBar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <HomeIcon />
+            <Link to='/' className={classes.link}>
+              <HomeIcon />
+            </Link>
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             Collection Tracker
@@ -197,8 +205,12 @@ export default function PrimarySearchAppBar() {
           </div> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Button color="inherit" className={classes.menuButton}>Login</Button>
-            <Button color="inherit" className={classes.menuButton}>Register</Button>
+            <Link to='/login' className={classes.link}>
+              <Button color="inherit" className={classes.menuButton}>Login</Button>
+            </Link>
+            <Link to='/register' className={classes.link}>
+              <Button color="inherit" className={classes.menuButton}>Register</Button>
+            </Link>
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={3} color="secondary">
                 <MailIcon />
