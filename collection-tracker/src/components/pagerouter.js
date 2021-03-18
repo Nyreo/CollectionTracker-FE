@@ -16,11 +16,9 @@ const PageRouter = () => {
     <Router>
       <NavBar />
       <Switch>
-        <Container>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Container>
+        <Route path="/">
+          <Home />
+        </Route>
       </Switch>
     </Router>
   );
