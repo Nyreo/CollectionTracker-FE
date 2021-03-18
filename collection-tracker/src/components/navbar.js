@@ -21,7 +21,11 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: 'linear-gradient(rgba(2, 62, 138, 0.2), rgba(2, 62, 138, 0.7))'
+    background: 'linear-gradient(rgb(67, 97, 238), rgb(67, 97, 238))',
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    boxShadow: 'none'
   },
   grow: {
     flexGrow: 1,
@@ -29,12 +33,14 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
     color: 'whitesmoke',
+    fontWeight: 700,
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    fontWeight: 700
   },
   title: {
+    color: 'whitesmoke',
+    fontWeight: 700,
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',

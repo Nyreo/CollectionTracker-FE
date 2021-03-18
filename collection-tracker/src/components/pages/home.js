@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import { Link } from "react-router-dom"
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   header: {
-    background: `linear-gradient(rgba(2, 62, 138, 0.2), rgba(2, 62, 138, 0.7)), url(${headerImage})`,
+    background: `linear-gradient(rgba(67, 97, 238, 0.2), rgba(67, 97, 238, 0.7)), url(${headerImage})`,
     backgroundPosition: '50% 50%',
     backgroundSize: '1920px 1200px',
     backgroundRepeat: 'no-repeat',
@@ -35,11 +36,23 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '4rem',
     marginBottom : 0,
   },
-  subtitle: {
-    fontSize: "1.5em",
-    margin: "auto",
+  titleText: {
+    fontSize: "1.2em", 
+    color: "whitesmoke",
+  },
+  subButton: {
+    fontSize: "1.2em",
+    margin: "20px auto",
     textTransform: "capitalize",
-    color: 'white',
+    color: '#292929',
+    textDecoration: 'none',
+    backgroundColor : 'whitesmoke',
+    "&:hover" :{
+      backgroundColor: 'whitesmoke'
+    },
+    fontWeight: 700,
+    borderRadius: "10px",
+    padding: "5px 25px"
   }
 }));
 
@@ -62,7 +75,12 @@ const Home = () => {
             <h1 className={classes.title}>Sending a package?</h1>
           </Grid>
           <Grid item xs={12}>
-            <Link to="/register" className={classes.subtitle}>Create an account today.</Link>
+            <p className={classes.titleText}>See all your packages in one place, make an account today!</p>
+          </Grid>
+          <Grid item xs={12}>
+            <Link to="/register" style={{textDecoration: 'none'}}>
+              <Button variant="contained" className={classes.subButton}>Sign-up!</Button>
+            </Link>
           </Grid>
         </Grid>
       </Box>
