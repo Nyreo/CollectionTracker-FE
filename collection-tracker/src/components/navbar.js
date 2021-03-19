@@ -21,11 +21,9 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: 'linear-gradient(rgb(67, 97, 238), rgb(67, 97, 238))',
-    // position: 'absolute',
-    // top: 0,
-    // left: 0,
-    boxShadow: 'none'
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    paddingTop: '10px',
   },
   grow: {
     flexGrow: 1,
@@ -37,10 +35,15 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    fontSize: '1.2em',
+  },
+  homeButton: {
+
   },
   title: {
     color: 'whitesmoke',
     fontWeight: 700,
+    fontSize: '2em',
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
@@ -94,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
+    height: '100%',
   },
 }));
 
@@ -190,7 +194,7 @@ export default function PrimarySearchAppBar() {
             aria-label="open drawer"
           >
             <Link to='/' className={classes.link}>
-              <HomeIcon />
+              <HomeIcon className={classes.homeButton}/>
             </Link>
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>

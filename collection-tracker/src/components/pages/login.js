@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom'
+
+// module imports
+import { loginRequest } from '../../modules/apiManager';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -7,7 +10,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
+// import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +18,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    position : "absolute",
+    top : "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+
+    backgroundColor: 'white',
+    borderRadius: '5px',
+
+    minWidth : '25%',
+    minHeight: '50%',
+
+    boxShadow: '2px 2px solid black',
+  },
+  error: {
+    color: 'red',
+    fontSize: '1.2em',
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -35,10 +56,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+
   const classes = useStyles();
 
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: '',
+  })
+  const [error, setError] = useState("error")
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault()
+
+    const response = await loginRequest(credentials)
+    
+    if(response.error) {
+      setError(response.error)
+      setTimeout(() => {
+        setError(null)
+      }, 5000)
+    }
+  }
+
+  const handleCredentialUpdate = (e) => {
+    
+    setCredentials({...credentials, [e.target.name]: e.target.value})
+
+    console.log(credentials)
+  }
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className={classes.root} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -47,6 +95,10 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        {/* error message */}
+        {
+          error ? (<span className={classes.error}>{error}</span>) : (null)
+        }
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"
@@ -56,6 +108,8 @@ export default function Login() {
             id="username"
             label="Username"
             name="username"
+            value={credentials.username}
+            onChange={handleCredentialUpdate}
             autoComplete="username"
             autoFocus
           />
@@ -68,6 +122,8 @@ export default function Login() {
             label="Password"
             type="password"
             id="password"
+            value={credentials.password}
+            onChange={handleCredentialUpdate}
             autoComplete="current-password"
           />
           <FormControlLabel
@@ -80,6 +136,7 @@ export default function Login() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleFormSubmit}
           >
             Sign In
           </Button>
@@ -93,6 +150,7 @@ export default function Login() {
           {'M137CEM Coursework 2021'}
         </Typography>
       </Box>
+      
     </Container>
   );
 }
