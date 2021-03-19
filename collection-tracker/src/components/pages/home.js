@@ -1,13 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 
-import { Link } from "react-router-dom"
+// styles
+import colourTheme from '../../styles/theme'
 
-// custom componetns
-import PackageTable from '../packageTable'
+// custom homes
+import AnonHome from './anonHome'
+import CustomerHome from './customerHome'
+import CourierHome from './courierHome'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,24 +21,24 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     textTransform: "capitalize",
-    color: "whitesmoke",
+    color: colourTheme.text.main,
     textAlign : 'center',
     fontSize: '6rem',
     marginBottom : 0,
   },
   titleText: {
     fontSize: "2em", 
-    color: "whitesmoke",
+    color: colourTheme.text.main,
   },
   subButton: {
-    fontSize: "2.5em",
+    fontSize: "2em",
     margin: "20px auto",
     textTransform: "capitalize",
-    color: '#292929',
+    color: colourTheme.text.main,
     textDecoration: 'none',
-    backgroundColor : 'whitesmoke',
+    backgroundColor : colourTheme.primary.main,
     "&:hover" :{
-      backgroundColor: 'whitesmoke'
+      backgroundColor: colourTheme.primary.hover
     },
     fontWeight: 700,
     borderRadius: "10px",
@@ -45,66 +46,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const renderCustomer = (classes) => {
-  return (
-    <Grid>
-      <Grid item xs={12}>
-        <h1>Customer Homepage</h1>
-      </Grid>
-      <Grid item xs={12}>
-        <PackageTable />
-      </Grid>
-    </Grid>
-  )
-}
-
-const renderCourier = (classes) => {
-  return (
-    <Grid>
-      <Grid item xs={12}>
-        <h1>Courier Homepage</h1>
-      </Grid>
-      <Grid item xs={12}>
-        <PackageTable />
-      </Grid>
-    </Grid>
-  )
-}
-
 const renderUserpage = (userType, classes) => {
   switch(userType) {
     case 'customer':
-      return renderCustomer(classes)
+      return <CustomerHome />
     case 'courier':
-      return renderCourier(classes)
+      return <CourierHome />
     case 'manager':
       break;
     default:
-      return renderUnknown(classes)
+      return <AnonHome classes={classes}/>
   }
 }
 
-const renderUnknown = (classes) => {
-  return (
-    <div className={classes.root}>
-      <Grid>
-        <Grid item xs={12}>
-          <h1 className={classes.title}>Sending a package?</h1>
-        </Grid>
-        <Grid item xs={12}>
-          <p className={classes.titleText}>See all your packages in one place, make an account today!</p>
-        </Grid>
-        <Grid item xs={12}>
-          <Link to="/register" style={{textDecoration: 'none'}}>
-            <Button variant="contained" className={classes.subButton}>Create an Account</Button>
-          </Link>
-        </Grid>
-      </Grid>
-    </div>
-  )
-}
-
-const Home = ({token, saveToken}) => {
+const Home = ({token}) => {
 
   const classes = useStyles();
 

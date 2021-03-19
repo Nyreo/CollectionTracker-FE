@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom'
 
+// theme import
+import colourTheme from '../../styles/theme'
+
 // module imports
 import { loginRequest } from '../../modules/apiManager';
 
@@ -14,7 +17,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -46,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: colourTheme.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -54,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: colourTheme.primary.main,
+    '&:hover': {
+      backgroundColor: colourTheme.primary.hover
+    }
   },
 }));
 
@@ -123,6 +130,7 @@ export default function Login({history, token, saveToken}) {
         }
         <form className={classes.form} noValidate>
           <TextField
+            className={classes.inputbox}
             variant="outlined"
             margin="normal"
             required
@@ -136,6 +144,7 @@ export default function Login({history, token, saveToken}) {
             autoFocus
           />
           <TextField
+            className={classes.inputbox}
             variant="outlined"
             margin="normal"
             required
@@ -172,7 +181,8 @@ export default function Login({history, token, saveToken}) {
           {'M137CEM Coursework 2021'}
         </Typography>
       </Box>
-      
+        
     </Container>
+    
   );
 }

@@ -18,25 +18,33 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+
+// styles
+import colourTheme from '../styles/theme'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'transparent',
     boxShadow: 'none',
     paddingTop: '10px',
+    marginBottom: '5%'
   },
   grow: {
     flexGrow: 1,
   },
   link: {
     textDecoration: 'none',
-    color: 'whitesmoke',
+    color: colourTheme.link.main,
     fontWeight: 700,
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    fontSize: '1.2em',
-    textTransform: 'capitalize'
+    fontSize: '1.5em',
+    textTransform: 'capitalize',
+    '&:hover' : {
+      backgroundColor: colourTheme.secondary.main
+    }
   },
   homeButton: {
 
@@ -223,6 +231,7 @@ export default function NavBar({token, clearToken}) {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             { token ? (
+              // auth
               <>
                 <Typography className={classes.welcomeMessage}>Welcome {token.username}</Typography>
                 <Button 
@@ -230,8 +239,14 @@ export default function NavBar({token, clearToken}) {
                   className={classes.menuButton}
                   onClick={clearToken}  
                 >Logout</Button>
+                <Button 
+                  color="inherit" 
+                  className={classes.menuButton}
+                  onClick={() => console.log('sending a package...')}  
+                >Send a Package</Button>
               </>
             ) : (
+              // not auth
               <>
                 <Link to='/login' className={classes.link}>
                   <Button color="inherit" className={classes.menuButton}>Login</Button>

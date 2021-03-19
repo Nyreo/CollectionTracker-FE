@@ -8,7 +8,7 @@ import headerImage from './images/header-photo.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: `linear-gradient(rgba(67, 97, 238, 0.2), rgba(67, 97, 238, 0.7)), url(${headerImage})`,
+    background: `linear-gradient(rgba(105, 48, 195, 0.8), rgba(72, 191, 227, 0.7)), url(${headerImage})`,
     backgroundPosition: '50% 50%',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
