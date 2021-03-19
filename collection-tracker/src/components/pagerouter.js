@@ -24,7 +24,10 @@ const PageRouter = ({token , saveToken, clearToken}) => {
       <Switch>
         {/* send package */}
         <Route render={
-          (props) => <SendPackage {...props} token={token}/>
+          (props) => token ? 
+          <SendPackage {...props} token={token}/>
+          :
+          <Redirect to='/' />
         } 
         path="/send" 
         />
