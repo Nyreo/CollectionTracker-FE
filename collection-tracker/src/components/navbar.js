@@ -36,9 +36,16 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
     fontSize: '1.2em',
+    textTransform: 'capitalize'
   },
   homeButton: {
 
+  },
+  welcomeMessage: {
+    margin: 'auto 20px',
+    textTransform: 'capitalize',
+    fontSize: '1.2rem',
+    fontStyle: 'italic',
   },
   title: {
     color: 'whitesmoke',
@@ -101,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function NavBar({token, clearToken}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -215,12 +222,27 @@ export default function PrimarySearchAppBar() {
           </div> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Link to='/login' className={classes.link}>
-              <Button color="inherit" className={classes.menuButton}>Login</Button>
-            </Link>
-            <Link to='/register' className={classes.link}>
-              <Button color="inherit" className={classes.menuButton}>Register</Button>
-            </Link>
+            { token ? (
+              <>
+                <Typography className={classes.welcomeMessage}>Welcome {token.username}</Typography>
+                <Button 
+                  color="inherit" 
+                  className={classes.menuButton}
+                  onClick={clearToken}  
+                >Logout</Button>
+              </>
+            ) : (
+              <>
+                <Link to='/login' className={classes.link}>
+                  <Button color="inherit" className={classes.menuButton}>Login</Button>
+                </Link>
+                <Link to='/register' className={classes.link}>
+                  <Button color="inherit" className={classes.menuButton}>Register</Button>
+                </Link>
+              </>
+            )
+            }
+            
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={3} color="secondary">
                 <MailIcon />

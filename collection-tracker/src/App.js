@@ -1,8 +1,4 @@
-import './App.css';
-
-// standard imports
-// import { useState } from 'react';
-
+import {useState, useEffect} from 'react'
 // router
 import PageRouter from './components/pagerouter';
 
@@ -26,12 +22,38 @@ const useStyles = makeStyles((theme) => ({
 const App = () => {
 
   const classes = useStyles();
+
+  const getToken = () => {
+    const tokenString = localStorage.getItem('token')
+    const token = JSON.parse(tokenString)
+  
+    return token
+  }
+  
+  const saveToken = _token => {
+    localStorage.setItem('token', JSON.stringify(_token));
+    setToken(_token);
+  }
+
+  const clearToken = () => {
+    localStorage.removeItem('token')
+    setToken(null)
+  }
+
   // whether the user is authorized
-  // const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState(getToken())
+
+  useEffect(() => {
+    console.log("token has been updated", token)
+  }, [token])
 
   return (
     <div className={classes.root}>
-      <PageRouter />
+      <PageRouter 
+        token={token} 
+        saveToken={saveToken}
+        clearToken={clearToken}  
+      />
     </div>
   )
 }

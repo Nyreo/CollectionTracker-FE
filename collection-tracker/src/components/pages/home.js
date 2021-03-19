@@ -41,10 +41,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Home = () => {
+const renderCustomer = (classes) => {
+  return (
+    <div>
+      <h1>Logged in</h1>
+    </div>
+  )
+}
 
-  const classes = useStyles();
+// const renderCourier = () => {
 
+// }
+
+const renderUnknown = (classes) => {
   return (
     <div className={classes.root}>
       <Grid>
@@ -61,8 +70,14 @@ const Home = () => {
         </Grid>
       </Grid>
     </div>
-    
   )
+}
+
+const Home = ({token, saveToken}) => {
+
+  const classes = useStyles();
+
+  return token ? renderCustomer(classes) : renderUnknown(classes)
 }
 
 export default Home

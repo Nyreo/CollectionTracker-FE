@@ -6,8 +6,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
-// import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -79,18 +77,25 @@ export default function Login() {
     console.log(credentials)
   }
 
-  const checkRepeatPassword = (e) => {
-    if(credentials.password != credentials.repeatpassword) {
-      setError('Passwords do not match.')
-    } else {
-      setError('')
-    }
-  }
+  // const checkRepeatPassword = (e) => {
+  //   if(credentials.password !== credentials.repeatpassword) {
+  //     setError('Passwords do not match.')
+  //   } else {
+  //     setError('')
+  //   }
+  // }
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault()
 
-    registerRequest(credentials)
+    const response = await registerRequest(credentials)
+
+    if(response.error) {
+      setError(response.error)
+      setTimeout(() => {
+        setError(null)
+      }, 5000)
+    }
   }
 
   return (
@@ -103,6 +108,10 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
+        {/* error message */}
+        {
+          error ? (<span className={classes.error}>{error}</span>) : (null)
+        }
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"

@@ -17,6 +17,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     position : "absolute",
@@ -55,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login({history, token, saveToken}) {
 
   const classes = useStyles();
 
@@ -63,10 +65,14 @@ export default function Login() {
     username: '',
     password: '',
   })
-  const [error, setError] = useState("error")
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
+  // submit login requests
   const handleFormSubmit = async (e) => {
     e.preventDefault()
+
+    setLoading(true)
 
     const response = await loginRequest(credentials)
     
@@ -75,14 +81,24 @@ export default function Login() {
       setTimeout(() => {
         setError(null)
       }, 5000)
+    } else {
+      console.log("Succesfully logged in... redirection...")
+      const {username, userType} = response.data.data
+      // stop loading
+      setLoading(false)
+      // update token
+      saveToken({username, userType})
+
+      history.push('/')
     }
   }
 
+  // update credentials on form change
   const handleCredentialUpdate = (e) => {
     
     setCredentials({...credentials, [e.target.name]: e.target.value})
 
-    console.log(credentials)
+    // console.log(credentials)
   }
 
   return (
@@ -95,6 +111,10 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        {/* loading symbol */}
+        {
+          loading ? (<CircularProgress />) : null
+        }
         {/* error message */}
         {
           error ? (<span className={classes.error}>{error}</span>) : (null)
