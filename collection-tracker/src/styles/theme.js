@@ -14,6 +14,12 @@ const colourTheme = {
   link: {
     main: 'whitesmoke',
     hover: 'rgb(94, 96, 206)'
+  },
+  button: {
+    main: 'transparent',
+    hover: 'whitesmoke',
+    text: 'whitesmoke',
+    textHover: 'rgb(116, 0, 184)'
   }
 }
 

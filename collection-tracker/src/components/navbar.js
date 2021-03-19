@@ -19,6 +19,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 
 // styles
 import colourTheme from '../styles/theme'
@@ -43,11 +44,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.5em',
     textTransform: 'capitalize',
     '&:hover' : {
-      backgroundColor: colourTheme.secondary.main
+      backgroundColor: colourTheme.button.hover,
+      color: colourTheme.button.textHover
     }
   },
-  homeButton: {
-
+  menuIcon: {
+    marginRight: theme.spacing(1),
   },
   welcomeMessage: {
     margin: 'auto 20px',
@@ -237,13 +239,18 @@ export default function NavBar({token, clearToken}) {
                 <Button 
                   color="inherit" 
                   className={classes.menuButton}
-                  onClick={clearToken}  
-                >Logout</Button>
+                  onClick={() => console.log('sending a package...')}  
+                ><AddBoxIcon className={classes.menuIcon} />
+                  Send Package
+                </Button>
                 <Button 
                   color="inherit" 
                   className={classes.menuButton}
-                  onClick={() => console.log('sending a package...')}  
-                >Send a Package</Button>
+                  onClick={clearToken}  
+                ><MeetingRoomIcon className={classes.menuIcon}/>
+                  Logout
+                </Button>
+                
               </>
             ) : (
               // not auth
