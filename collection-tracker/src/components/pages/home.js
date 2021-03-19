@@ -2,8 +2,12 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
 import { Link } from "react-router-dom"
+
+// custom componetns
+import PackageTable from '../packageTable'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,9 +47,14 @@ const useStyles = makeStyles((theme) => ({
 
 const renderCustomer = (classes) => {
   return (
-    <div>
-      <h1>Logged in</h1>
-    </div>
+    <Grid>
+      <Grid item xs={12}>
+        <h1>Customer Homepage</h1>
+      </Grid>
+      <Grid item xs={12}>
+        <PackageTable />
+      </Grid>
+    </Grid>
   )
 }
 
@@ -77,7 +86,12 @@ const Home = ({token, saveToken}) => {
 
   const classes = useStyles();
 
-  return token ? renderCustomer(classes) : renderUnknown(classes)
+  return (
+    <Container>
+      {token ? renderCustomer(classes) : renderUnknown(classes)}
+    </Container>
+    
+  )
 }
 
 export default Home
