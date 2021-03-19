@@ -60,20 +60,12 @@ export default function Review({_package}) {
           <Typography gutterBottom>{_package.weight}kg</Typography>
         </Grid>
         {/*  */}
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <Typography variant="h6" gutterBottom className={classes.title}>
             Shipping Address
           </Typography>
           <Typography gutterBottom>{_package.recpName}</Typography>
           <Typography gutterBottom>{_package.address}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom className={classes.title}>
-            Payment details
-          </Typography>
-          <Grid container>
-            
-          </Grid>
         </Grid>
       </Grid>
     </>

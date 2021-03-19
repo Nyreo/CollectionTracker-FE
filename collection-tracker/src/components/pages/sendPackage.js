@@ -91,6 +91,9 @@ export default function SendPackage({token}) {
     weight: 0,
     recpName: '',
     address: '',
+    username: token.username,
+    datetime: '',
+    status: 'not-dispatched'
   })
 
   const updatePackage = (prop, val) => {
@@ -99,7 +102,17 @@ export default function SendPackage({token}) {
   }
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    
+    const nextStep = activeStep + 1
+    setActiveStep(nextStep);
+
+    if(nextStep >= steps.length) {
+      // add date of submission here
+      _package.datetime = (new Date()).getTime() // epoch time
+
+      // possibly submit here?
+      console.log(_package)
+    }
   };
 
   const handleBack = () => {
@@ -150,6 +163,9 @@ export default function SendPackage({token}) {
                     {activeStep === steps.length - 1 ? 'Send Package' : 'Next'}
                   </Button>
                 </div>
+                {activeStep !== 0 && (
+                  <Typography style={{marginTop: '2rem', color:'grey'}}>If you want to change any details, simply use the back button</Typography>
+                )}
               </>
             )}
           </>
