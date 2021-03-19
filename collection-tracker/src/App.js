@@ -1,25 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState, useEffect} from 'react'
+// router
+import PageRouter from './components/pagerouter';
 
-function App() {
+import { makeStyles } from '@material-ui/core/styles';
+
+import headerImage from './images/header-photo.jpg';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    background: `linear-gradient(rgba(105, 48, 195, 0.8), rgba(72, 191, 227, 0.7)), url(${headerImage})`,
+    backgroundPosition: '50% 50%',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    maxWidth: "100vw",
+    height: "100vh",
+    textAlign: "center",
+  }
+}));
+
+const App = () => {
+
+  const classes = useStyles();
+
+  const getToken = () => {
+    const tokenString = localStorage.getItem('token')
+    const token = JSON.parse(tokenString)
+  
+    return token
+  }
+  
+  const saveToken = _token => {
+    localStorage.setItem('token', JSON.stringify(_token));
+    setToken(_token);
+  }
+
+  const clearToken = () => {
+    localStorage.removeItem('token')
+    setToken(null)
+  }
+
+  // whether the user is authorized
+  const [token, setToken] = useState(getToken())
+
+  useEffect(() => {
+    console.log("token has been updated", token)
+  }, [token])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={classes.root}>
+      <PageRouter 
+        token={token} 
+        saveToken={saveToken}
+        clearToken={clearToken}  
+      />
     </div>
-  );
+  )
 }
 
 export default App;
