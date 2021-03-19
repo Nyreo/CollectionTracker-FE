@@ -4,7 +4,6 @@ import PageRouter from './components/pagerouter';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-
 import headerImage from './images/header-photo.jpg';
 
 const useStyles = makeStyles((theme) => ({

@@ -58,9 +58,31 @@ const renderCustomer = (classes) => {
   )
 }
 
-// const renderCourier = () => {
+const renderCourier = (classes) => {
+  return (
+    <Grid>
+      <Grid item xs={12}>
+        <h1>Courier Homepage</h1>
+      </Grid>
+      <Grid item xs={12}>
+        <PackageTable />
+      </Grid>
+    </Grid>
+  )
+}
 
-// }
+const renderUserpage = (userType, classes) => {
+  switch(userType) {
+    case 'customer':
+      return renderCustomer(classes)
+    case 'courier':
+      return renderCourier(classes)
+    case 'manager':
+      break;
+    default:
+      return renderUnknown(classes)
+  }
+}
 
 const renderUnknown = (classes) => {
   return (
@@ -86,9 +108,11 @@ const Home = ({token, saveToken}) => {
 
   const classes = useStyles();
 
+  const userType = token ? token.userType : null
+
   return (
     <Container>
-      {token ? renderCustomer(classes) : renderUnknown(classes)}
+      {renderUserpage(userType, classes)}
     </Container>
     
   )

@@ -84,6 +84,8 @@ export default function Login({history, token, saveToken}) {
     } else {
       console.log("Succesfully logged in... redirection...")
       const {username, userType} = response.data.data
+
+      console.log(username, userType)
       // stop loading
       setLoading(false)
       // update token

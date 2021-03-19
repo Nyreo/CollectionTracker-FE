@@ -14,15 +14,26 @@ const PageRouter = ({token , saveToken, clearToken}) => {
 
   return (
     <Router>
-      <NavBar token={token} clearToken={clearToken}/>
+      {/* navbar */}
+      <NavBar 
+        token={token}
+        clearToken={clearToken} 
+      />
+      {/* routes */}
       <Switch>
         <Route render={
-          (props) => token ? <Redirect to='/' /> : <Login {...props} token={token} saveToken={saveToken}/>
+          (props) => token ? 
+            <Redirect to='/' /> 
+            : 
+            <Login {...props} token={token} saveToken={saveToken}/>
         } 
         path="/login" 
         />
         <Route render={
-          (props) => token ? <Redirect to='/' /> : <Register {...props} saveToken={saveToken}/>
+          (props) => token ? 
+            <Redirect to='/' /> 
+            : 
+            <Register {...props} saveToken={saveToken}/>
         } 
         path="/register" 
         />
