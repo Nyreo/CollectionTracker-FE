@@ -159,7 +159,7 @@ export default function SendPackage({token}) {
                   We have received your request! This package (and all other submitted packages) can be tracked on the 
                   Home page. The tracking number for this request is 
                   <Link to='/'>
-                  {trackingNumber}
+                   {trackingNumber}
                   </Link>
                 </Typography>
               </>
