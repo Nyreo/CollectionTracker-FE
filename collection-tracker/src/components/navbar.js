@@ -235,7 +235,7 @@ export default function NavBar({token, clearToken}) {
             { token ? (
               // auth
               <>
-                <Typography className={classes.welcomeMessage}>Welcome {token.username}</Typography>
+                <Typography className={classes.welcomeMessage}>Welcome {token.userDetails.username}</Typography>
                 <Link to='/send' className={classes.link}>
                   <Button 
                     color="inherit" 

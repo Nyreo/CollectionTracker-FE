@@ -81,7 +81,7 @@ export default function Login({history, token, saveToken}) {
 
     setLoading(true)
 
-    const response = await loginRequest(credentials)
+    const {response, authHeader} = await loginRequest(credentials)
     
     if(response.error) {
       setError(response.error)
@@ -90,13 +90,10 @@ export default function Login({history, token, saveToken}) {
       }, 5000)
     } else {
       console.log("Succesfully logged in... redirection...")
-      const {username, userType} = response.data.data
-
-      console.log(username, userType)
       // stop loading
       setLoading(false)
       // update token
-      saveToken({username, userType})
+      saveToken({userDetails: response.data.data, authHeader})
 
       history.push('/')
     }

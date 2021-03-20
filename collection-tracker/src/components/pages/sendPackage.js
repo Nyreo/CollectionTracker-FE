@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 
+import { postPackageRequest } from '../../modules/apiManager'
+
 import colourTheme from '../../styles/theme'
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from '../forms/address';
 import PackageDetailsForm from '../forms/packageDetails';
 import Review from '../forms/review';
+import { CircularProgress } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -83,7 +86,9 @@ function getStepContent(step, _package, updatePackage) {
 
 export default function SendPackage({token}) {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const [trackingNumber, setTrackingNumber] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const [_package, setPackage] = useState({
     sendPostcode: '',
@@ -91,9 +96,7 @@ export default function SendPackage({token}) {
     weight: 0,
     recpName: '',
     address: '',
-    username: token.username,
-    datetime: '',
-    status: 'not-dispatched'
+    date: '',
   })
 
   const updatePackage = (prop, val) => {
@@ -101,18 +104,27 @@ export default function SendPackage({token}) {
     console.log(_package)
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     
     const nextStep = activeStep + 1
-    setActiveStep(nextStep);
 
     if(nextStep >= steps.length) {
-      // add date of submission here
-      _package.datetime = (new Date()).getTime() // epoch time
+      setLoading(true)
 
-      // possibly submit here?
-      console.log(_package)
-    }
+      console.log("Sending package...");
+
+      // send
+      const response = await postPackageRequest(_package, token.authHeader)
+    
+      console.log(response)
+
+      if(response.error) console.log("An error occured...");
+      else {
+        setTrackingNumber(response.data.data.trackingNumber)
+      }
+      setLoading(false)
+    } 
+    setActiveStep(nextStep);
   };
 
   const handleBack = () => {
@@ -127,6 +139,9 @@ export default function SendPackage({token}) {
           <Typography component="h1" variant="h4" align="center">
             Sending a Package.
           </Typography>
+          { loading && (
+            <CircularProgress />
+          )}
           <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((label) => (
               <Step style={{color: 'black'}} key={label}>
@@ -142,7 +157,10 @@ export default function SendPackage({token}) {
                 </Typography>
                 <Typography variant="subtitle1">
                   We have received your request! This package (and all other submitted packages) can be tracked on the 
-                  <Link to='/'> Home page</Link>.
+                  Home page. The tracking number for this request is 
+                  <Link to='/'>
+                  {trackingNumber}
+                  </Link>
                 </Typography>
               </>
             ) : (
