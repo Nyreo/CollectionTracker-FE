@@ -8,6 +8,7 @@ import NavBar from './navbar';
 import Home from './pages/home';
 import Login from './pages/login';
 import Register from './pages/register';
+import SendPackage from "./pages/sendPackage";
 
 
 const PageRouter = ({token , saveToken, clearToken}) => {
@@ -21,6 +22,16 @@ const PageRouter = ({token , saveToken, clearToken}) => {
       />
       {/* routes */}
       <Switch>
+        {/* send package */}
+        <Route render={
+          (props) => token ? 
+          <SendPackage {...props} token={token}/>
+          :
+          <Redirect to='/' />
+        } 
+        path="/send" 
+        />
+        {/* login */}
         <Route render={
           (props) => token ? 
             <Redirect to='/' /> 
@@ -29,6 +40,7 @@ const PageRouter = ({token , saveToken, clearToken}) => {
         } 
         path="/login" 
         />
+        {/* register */}
         <Route render={
           (props) => token ? 
             <Redirect to='/' /> 
@@ -42,6 +54,7 @@ const PageRouter = ({token , saveToken, clearToken}) => {
         } 
         path="/" 
         />
+        
       </Switch>
     </Router>
   );

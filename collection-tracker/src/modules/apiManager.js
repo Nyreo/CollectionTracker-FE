@@ -2,24 +2,22 @@ import axios from 'axios';
 
 const baseuri = "http://localhost:8080"
 
+const generateToken = (userDetails) => {
+  return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;
+}
 
 export async function loginRequest(credentials) {
-  console.log(credentials) // remove prod
-
-  const {username, password} = credentials;
-  const token = btoa(`${username}:${password}`)
-  
-  const authHeader = `Basic ${token}`
+  const authHeader = generateToken(credentials)
 
   try {
-
-    const response = await axios.get(`${baseuri}/accounts`, {
+    const response = await axios.get(`${baseuri}/accounts`, 
+    {
       headers: {
         'Authorization': authHeader
       }
     })
 
-    return response
+    return {response, authHeader}
 
   } catch (error) {
     console.log(error)
@@ -32,12 +30,31 @@ export async function registerRequest(credentials) {
   console.log(credentials) // remove prod
 
   try {
-    const response = await axios.post(`${baseuri}/accounts`, {
-      data: credentials
-    })
+    const response = await axios.post(`${baseuri}/accounts`, credentials)
 
     console.log(response)
   } catch (error) {
     console.log(error)
+  }
+}
+
+export async function postPackageRequest(_package, auth) {
+  // console.log(_package)
+
+  console.log(`authHeader: ${auth}`)
+
+  try {
+    const response = await axios.post(`${baseuri}/packages`, _package,
+    {
+      headers: {
+        'Authorization': auth
+      }
+    })
+
+    console.log(response)
+    return response
+  } catch (error) {
+    console.log(error)
+    return {error}
   }
 }

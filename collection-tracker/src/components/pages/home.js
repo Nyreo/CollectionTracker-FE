@@ -63,7 +63,7 @@ const Home = ({token}) => {
 
   const classes = useStyles();
 
-  const userType = token ? token.userType : null
+  const userType = token ? token.userDetails.userType : null
 
   return (
     <Container>

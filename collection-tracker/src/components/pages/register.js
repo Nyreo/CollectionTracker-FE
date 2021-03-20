@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom'
 
+// styles
+import colourTheme from '../../styles/theme';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: colourTheme.primary.main,
   },
   select: {
     marginTop: '1em',
@@ -54,10 +57,14 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: colourTheme.primary.main,
+    '&:hover' : {
+      backgroundColor: colourTheme.primary.hover
+    }
   },
 }));
 
-export default function Login() {
+export default function Register() {
   const classes = useStyles();
 
   const [credentials, setCredentials] = useState({
@@ -171,6 +178,7 @@ export default function Login() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleFormSubmit}
           >
             Register
           </Button>

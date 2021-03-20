@@ -235,14 +235,15 @@ export default function NavBar({token, clearToken}) {
             { token ? (
               // auth
               <>
-                <Typography className={classes.welcomeMessage}>Welcome {token.username}</Typography>
-                <Button 
-                  color="inherit" 
-                  className={classes.menuButton}
-                  onClick={() => console.log('sending a package...')}  
-                ><AddBoxIcon className={classes.menuIcon} />
-                  Send Package
-                </Button>
+                <Typography className={classes.welcomeMessage}>Welcome {token.userDetails.username}</Typography>
+                <Link to='/send' className={classes.link}>
+                  <Button 
+                    color="inherit" 
+                    className={classes.menuButton} 
+                  ><AddBoxIcon className={classes.menuIcon} />
+                    Send Package
+                  </Button>
+                </Link>
                 <Button 
                   color="inherit" 
                   className={classes.menuButton}
@@ -256,10 +257,16 @@ export default function NavBar({token, clearToken}) {
               // not auth
               <>
                 <Link to='/login' className={classes.link}>
-                  <Button color="inherit" className={classes.menuButton}>Login</Button>
+                  <Button 
+                    color="inherit" 
+                    className={classes.menuButton}
+                  >Login</Button>
                 </Link>
                 <Link to='/register' className={classes.link}>
-                  <Button color="inherit" className={classes.menuButton}>Register</Button>
+                  <Button 
+                    color="inherit" 
+                    className={classes.menuButton}>
+                  Register</Button>
                 </Link>
               </>
             )
