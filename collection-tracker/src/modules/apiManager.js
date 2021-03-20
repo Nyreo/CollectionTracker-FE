@@ -32,9 +32,11 @@ export async function registerRequest(credentials) {
   try {
     const response = await axios.post(`${baseuri}/accounts`, credentials)
 
-    console.log(response)
+    const authHeader = generateToken(credentials);
+    return {response, authHeader}
   } catch (error) {
     console.log(error)
+    return {error}
   }
 }
 

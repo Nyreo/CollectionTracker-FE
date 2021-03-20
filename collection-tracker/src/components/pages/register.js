@@ -64,14 +64,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register() {
+export default function Register({saveToken, history}) {
   const classes = useStyles();
 
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
     repeatpassword: '',
-    usertype: ''
+    userType: 'customer'
   })
 
   const [error, setError] = useState(null)
@@ -84,24 +84,36 @@ export default function Register() {
     console.log(credentials)
   }
 
-  // const checkRepeatPassword = (e) => {
-  //   if(credentials.password !== credentials.repeatpassword) {
-  //     setError('Passwords do not match.')
-  //   } else {
-  //     setError('')
-  //   }
-  // }
+  const updateError = (err) => {
+    setError(err)
+    setTimeout(() => {
+      setError(null)
+    }, 5000)
+  }
 
   const handleFormSubmit = async (e) => {
     e.preventDefault()
 
-    const response = await registerRequest(credentials)
+    // check passwords are correct
+    if(!(credentials.password && credentials.repeatpassword)) {
+      updateError("Please confirm your password");
+      return
+    } else if(credentials.password !== credentials.repeatpassword) {
+      updateError("Passwords must match!");
+      return
+    }
 
-    if(response.error) {
-      setError(response.error)
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+    delete credentials.repeatpassword
+    const {response, authHeader, error} = await registerRequest(credentials)
+
+    if(error) updateError(error)
+    else {
+      saveToken({userDetails: {
+        username: credentials.username,
+        userType: credentials.userType
+      }, authHeader})
+
+      history.push('/');
     }
   }
 
@@ -164,12 +176,13 @@ export default function Register() {
           labelId="demo-simple-select-label"
           id="usertype"
           variant='outlined'
-          name="usertype"
+          name="userType"
+          defaultValue={"Customer"}
           value={credentials.userType}
           onChange={handleCredentialUpdate}
           >
-            <MenuItem value={"Customer"}>Customer</MenuItem>
-            <MenuItem value={"Courier"}>Courier</MenuItem>
+            <MenuItem value={"customer"}>Customer</MenuItem>
+            <MenuItem value={"courier"}>Courier</MenuItem>
           </Select>
           <FormHelperText>Which type of user are you?</FormHelperText>
           <Button

@@ -75,19 +75,24 @@ export default function Login({history, token, saveToken}) {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const updateError = (err) => {
+    setError(err)
+    setTimeout(() => {
+      setError(null)
+    }, 5000)
+  }
+
   // submit login requests
   const handleFormSubmit = async (e) => {
     e.preventDefault()
 
     setLoading(true)
 
-    const {response, authHeader} = await loginRequest(credentials)
+    const {response, authHeader, error} = await loginRequest(credentials)
     
-    if(response.error) {
-      setError(response.error)
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+    if(error) {
+      updateError(error);
+      setLoading(false);
     } else {
       console.log("Succesfully logged in... redirection...")
       // stop loading
