@@ -130,6 +130,29 @@ const CourierHome = ({token}) => {
     }
   }
 
+  // returns only the needed informatio from packages
+  const extractPackageData = () => {
+    // recpName, destPostcode, weight, elapsedTime
+
+    const now = (new Date()).getTime()
+
+    const extractedData = packages.map(_package => {
+      const rawElapsedTime = (now - _package.date) / 1000 // seconds
+      const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
+
+      const newPackage = {
+        trackingNumber: _package._id,
+        status: _package.status,
+        "Recipient Name" : _package.recpName,
+        "Destination Postcode": _package.destPostcode,
+        "Package Weight" : `${_package.weight}kg`,
+        "Elapsed Time" : elapsedTime,
+      }
+      return newPackage
+    })
+    return extractedData
+  }
+
   useEffect(() => {
     console.log("Loaded Data!");
     console.log(packages)
@@ -176,7 +199,7 @@ const CourierHome = ({token}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
-      <PackageList packages={packages}/>
+      <PackageList packages={packages ? extractPackageData() : {}}/>
       </Grid>
     </Grid>
   )

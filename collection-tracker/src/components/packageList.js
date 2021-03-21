@@ -36,7 +36,7 @@ export default function PackageList({packages}) {
 
     packages.forEach(_package => {
       _packages.push(
-        <div key={`package${_package._id}`}>
+        <div key={`package${_package.trackingNumber}`}>
           <PackageItem data={_package}  />
           <Divider component="li" />
         </div>

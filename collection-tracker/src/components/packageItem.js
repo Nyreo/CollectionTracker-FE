@@ -52,58 +52,69 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const renderStatusIcon = (status, classes) => {
-  switch(status) {
-    case 'not-dispatched':
-      return (
-        <div className={classes.iconContainer}>
-          <RemoveCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.notDispatched}`} />
-          <Typography className={classes.statusText}>{status}</Typography>
-        </div>
-      )
-    case 'dispatched':
-      return (
-        <div className={classes.iconContainer}>
-          <AddCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.dispatched}`} />
-          <Typography className={classes.statusText}>{status}</Typography>
-        </div>
-      )
-    case 'delivered':
-      return (
-        <div className={classes.iconContainer}>
-          <CheckCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.delivered}`} />
-          <Typography className={classes.statusText}>{status}</Typography>
-        </div>
-      )
-    default:
-      break;
-  }
-}
+
 
 export default function PackageItem({data}) {
 
   const classes = useStyles()
 
+  const renderStatusIcon = () => {
+    switch(data.status) {
+      case 'not-dispatched':
+        return (
+          <div className={classes.iconContainer}>
+            <RemoveCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.notDispatched}`} />
+            <Typography className={classes.statusText}>{data.status}</Typography>
+          </div>
+        )
+      case 'dispatched':
+        return (
+          <div className={classes.iconContainer}>
+            <AddCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.dispatched}`} />
+            <Typography className={classes.statusText}>{data.status}</Typography>
+          </div>
+        )
+      case 'delivered':
+        return (
+          <div className={classes.iconContainer}>
+            <CheckCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.delivered}`} />
+            <Typography className={classes.statusText}>{data.status}</Typography>
+          </div>
+        )
+      default:
+        break;
+    }
+  }
+
+  const renderItemData = () => {
+
+    const {status, trackingNumber, ...newData} = data
+    const keys = Object.keys(newData)
+
+    return keys.map(key => {
+      if(key === "trackingNumber") {
+        return (
+          <Grid key={`${trackingNumber}.${key}`} item xs={12}>
+            <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
+            <Typography className={classes.trackingNumberValue} display='inline' >{data[key]}</Typography>
+          </Grid>
+        )
+      } else {
+        return (
+          <Grid key={`${data.trackingNumber}.${key}`} item xs={6} sm={3}>
+            <Typography >{key}</Typography>
+            <Typography >{data[key]}</Typography>
+          </Grid>
+        )
+      }
+    })
+  }
+
   return (
     <ListItem alignItems="flex-start" className={classes.root}>
-        {renderStatusIcon(data.status, classes)}
+        {renderStatusIcon()}
         <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
-          <Typography className={classes.trackingNumberValue} display='inline' >{data._id}</Typography>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <Typography >Added </Typography>
-          <Typography >{new Date(data.date).toLocaleString()}</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Destination Postcode</Typography>
-          <Typography >{data.destPostcode}</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Package Weight</Typography>
-          <Typography >{data.weight}kg</Typography>
-        </Grid>
+        {renderItemData()}
       </Grid>
       </ListItem>
   )
