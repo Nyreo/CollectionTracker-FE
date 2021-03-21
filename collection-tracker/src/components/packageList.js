@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
 
     overflowY: 'scroll',
-    minHeight: '25%',
+    minHeight: '250px',
   },
   inline: {
     display: 'inline',

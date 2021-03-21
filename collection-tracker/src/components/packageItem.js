@@ -93,17 +93,9 @@ export default function PackageItem({data}) {
           <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
           <Typography className={classes.trackingNumberValue} display='inline' >{data._id}</Typography>
         </Grid>
-        <Grid item xs={6} md={6}>
-          <Typography display='inline'>Added: </Typography>
-          <Typography display='inline' >{new Date(data.date).toLocaleString()}</Typography>
-        </Grid>
-        <Grid item xs={6} md={6}>
-          <Typography display='inline'>Address </Typography>
-          <Typography display='inline' >{data.address}</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Sender Postcode</Typography>
-          <Typography >{data.sendPostcode}</Typography>
+        <Grid item xs={6} md={3}>
+          <Typography >Added </Typography>
+          <Typography >{new Date(data.date).toLocaleString()}</Typography>
         </Grid>
         <Grid item xs={6} sm={3}>
           <Typography >Destination Postcode</Typography>
@@ -112,10 +104,6 @@ export default function PackageItem({data}) {
         <Grid item xs={6} sm={3}>
           <Typography >Package Weight</Typography>
           <Typography >{data.weight}kg</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Destination Postcode</Typography>
-          <Typography >{data.destPostcode}</Typography>
         </Grid>
       </Grid>
       </ListItem>
