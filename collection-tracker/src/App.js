@@ -1,10 +1,13 @@
 import {useState, useEffect} from 'react'
-// router
-import PageRouter from './components/pagerouter';
 
 import { makeStyles } from '@material-ui/core/styles';
 
+// router
+import PageRouter from './components/pagerouter';
+
 import headerImage from './images/header-photo.jpg';
+
+import FeedbackBox from './components/feedbackBox'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,19 +43,36 @@ const App = () => {
     setToken(null)
   }
 
+  const updateNotification = (n) => {
+    setNotification(n)
+    setOpen(true)
+  }
+
   // whether the user is authorized
   const [token, setToken] = useState(getToken())
+
+  // error
+  const [notification, setNotification] = useState({});
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     console.log("token has been updated", token)
   }, [token])
 
+
   return (
     <div className={classes.root}>
+      <FeedbackBox 
+        message={notification.message} 
+        type={notification.type}
+        open={open}
+        setOpen={(val) => setOpen(val)}
+      />
       <PageRouter 
         token={token} 
         saveToken={saveToken}
-        clearToken={clearToken}  
+        clearToken={clearToken}
+        updateNotification={updateNotification}  
       />
     </div>
   )
