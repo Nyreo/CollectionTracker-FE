@@ -100,20 +100,17 @@ const fetchPackages = async (token, setPackages, setLoading) => {
   setLoading(false)
 }
 
-const CourierHome = ({token}) => {
+const CourierHome = ({token, updateNotification}) => {
   
   const classes = useStyles()
 
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
   const [trackingNumber, setTrackingNumber] = useState('')
-  const [error, setError] = useState('')
 
   const updateError = val => {
-    setError(val)
-    setTimeout(() => {
-      setError('')
-    }, 5000)
+    const notification = { message : val, type: 'error'}
+    updateNotification(notification)
   }
 
   const handleChange = (e) => {
@@ -129,8 +126,6 @@ const CourierHome = ({token}) => {
     packages.forEach(_package => {
       if(_package._id === trackingNumber) throw new Error("You have already selected that package.");
     })
-
-
   }
 
   const handleTrackingSubmit = async () => {
@@ -147,6 +142,14 @@ const CourierHome = ({token}) => {
     if(response.err) updateError(response.err)
     else {
       console.log(response)
+
+      // set notiifcation
+      const notification = {message:'Package has been selected', type:'success'}
+      updateNotification(notification)
+
+      // reset tracking number
+      setTrackingNumber('')
+
       fetchPackages(token, setPackages, setLoading)
     }
   }
@@ -211,10 +214,7 @@ const CourierHome = ({token}) => {
             <SearchIcon style={{fontSize: '2em'}} />
           </IconButton>
         </Paper>
-      </Grid> 
-      { error && (
-          <p>{error}</p>
-        )}   
+      </Grid>   
       <Grid className={classes.dataDisplay} item xs={12}>
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>

@@ -11,7 +11,7 @@ import Register from './pages/register';
 import SendPackage from "./pages/sendPackage";
 
 
-const PageRouter = ({token , saveToken, clearToken}) => {
+const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
 
   return (
     <Router>
@@ -25,7 +25,7 @@ const PageRouter = ({token , saveToken, clearToken}) => {
         {/* send package */}
         <Route render={
           (props) => token ? 
-          <SendPackage {...props} token={token}/>
+          <SendPackage {...props} token={token} />
           :
           <Redirect to='/' />
         } 
@@ -36,7 +36,7 @@ const PageRouter = ({token , saveToken, clearToken}) => {
           (props) => token ? 
             <Redirect to='/' /> 
             : 
-            <Login {...props} token={token} saveToken={saveToken}/>
+            <Login {...props} token={token} saveToken={saveToken} updateNotification={updateNotification}/>
         } 
         path="/login" 
         />
@@ -49,8 +49,9 @@ const PageRouter = ({token , saveToken, clearToken}) => {
         } 
         path="/register" 
         />
+        {/* home */}
         <Route render={
-          (props) => <Home {...props} token={token} saveToken={saveToken}/>
+          (props) => <Home {...props} token={token} saveToken={saveToken} updateNotification={updateNotification}/>
         } 
         path="/" 
         />
