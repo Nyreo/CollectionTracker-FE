@@ -104,7 +104,7 @@ export default function Register({saveToken, history}) {
     }
 
     delete credentials.repeatpassword
-    const {response, authHeader, error} = await registerRequest(credentials)
+    const {authHeader, error} = await registerRequest(credentials)
 
     if(error) updateError(error)
     else {

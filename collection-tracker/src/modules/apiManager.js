@@ -40,13 +40,14 @@ export async function registerRequest(credentials) {
   }
 }
 
-export async function getPackageRequest(username, auth) {
+export async function getPackageRequest(username, auth, courier="false") {
 
   console.log(`username: ${username}`);
   console.log(`auth ${auth}`)
+  console.log(`courier: ${courier}`)
 
   try {
-    const response = await axios.get(`${baseuri}/packages/${username}`, 
+    const response = await axios.get(`${baseuri}/packages/${username}?courier=${courier}`, 
     {
       headers: {
         'Authorization': auth
@@ -78,7 +79,18 @@ export async function postPackageRequest(_package, auth) {
     console.log(response)
     return response
   } catch (error) {
-    console.log(error)
+    console.log(`error ${error}`)
     return {error}
   }
+}
+
+export async function patchPackageRequest(trackingNumber, status, auth) {
+  return axios.patch(`${baseuri}/packages/tracking/${trackingNumber}`, {status},
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  .then(response => response.data)
+  .catch(error => error.response.data)
 }

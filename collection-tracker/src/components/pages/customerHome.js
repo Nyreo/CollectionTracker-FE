@@ -65,6 +65,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const fetchPackages = async (token, setPackages, setLoading) => {
+  const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader)
+  
+  if(error) console.log(error)
+  else setPackages(data.data)
+
+  setLoading(false)
+}
+
 const CustomerHome = ({token}) => {
   
   const classes = useStyles()
@@ -72,24 +81,14 @@ const CustomerHome = ({token}) => {
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
 
-
-  const fetchPackages = async () => {
-    const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader)
-    
-    if(error) console.log(error)
-    else setPackages(data.data)
-    setLoading(false)
-  }
-
   useEffect(() => {
     console.log("Loaded Data!");
     console.log(packages)
   }, [packages])
 
   useEffect(() => {
-    setLoading(true)
-    fetchPackages()
-  }, [])
+    fetchPackages(token ,setPackages, setLoading)
+  }, [token])
   
   return (
     <Grid className={classes.root} >
