@@ -50,15 +50,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const renderUserpage = (token, classes,) => {
+const renderUserpage = (_props, classes, ) => {
 
-  if(!token) return <AnonHome classes={classes} />
+  if(!_props.token) return <AnonHome classes={classes} />
 
-  switch(token.userDetails.userType) {
+  switch(_props.token.userDetails.userType) {
     case 'customer':
-      return <CustomerHome token={token}/>
+      return <CustomerHome {..._props}/>
     case 'courier':
-      return <CourierHome token={token}/>
+      return <CourierHome {..._props}/>
     case 'manager':
       break;
     default:
@@ -66,13 +66,13 @@ const renderUserpage = (token, classes,) => {
   }
 }
 
-const Home = ({token}) => {
+const Home = ({token, updateNotification}) => {
 
   const classes = useStyles();
 
   return (
     <Container className={classes.container}>
-      {renderUserpage(token, classes)}
+      {renderUserpage({token, updateNotification}, classes)}
     </Container>
     
   )

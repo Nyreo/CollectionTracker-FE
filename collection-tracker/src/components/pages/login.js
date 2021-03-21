@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({history, token, saveToken}) {
+export default function Login({history, token, saveToken, updateNotification}) {
 
   const classes = useStyles();
 
@@ -72,14 +72,11 @@ export default function Login({history, token, saveToken}) {
     username: '',
     password: '',
   })
-  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
   const updateError = (err) => {
-    setError(err)
-    setTimeout(() => {
-      setError(null)
-    }, 5000)
+    const notification = { message : err, type: 'error'}
+    updateNotification(notification)
   }
 
   // submit login requests
@@ -94,11 +91,14 @@ export default function Login({history, token, saveToken}) {
       updateError(error);
       setLoading(false);
     } else {
-      console.log("Succesfully logged in... redirection...")
       // stop loading
       setLoading(false)
       // update token
       saveToken({userDetails: response.data.data, authHeader})
+
+      // create notification
+      const notification = { message: 'You have successfully logged in!', type:'success'}
+      updateNotification(notification)
 
       history.push('/')
     }
@@ -106,10 +106,7 @@ export default function Login({history, token, saveToken}) {
 
   // update credentials on form change
   const handleCredentialUpdate = (e) => {
-    
     setCredentials({...credentials, [e.target.name]: e.target.value})
-
-    // console.log(credentials)
   }
 
   return (
@@ -125,10 +122,6 @@ export default function Login({history, token, saveToken}) {
         {/* loading symbol */}
         {
           loading ? (<CircularProgress />) : null
-        }
-        {/* error message */}
-        {
-          error ? (<span className={classes.error}>{error}</span>) : (null)
         }
         <form className={classes.form} noValidate>
           <TextField

@@ -10,6 +10,7 @@ import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    marginTop: '6em',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
