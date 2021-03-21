@@ -40,6 +40,28 @@ export async function registerRequest(credentials) {
   }
 }
 
+export async function getPackageRequest(username, auth) {
+
+  console.log(`username: ${username}`);
+  console.log(`auth ${auth}`)
+
+  try {
+    const response = await axios.get(`${baseuri}/packages/${username}`, 
+    {
+      headers: {
+        'Authorization': auth
+      }
+    })
+
+    console.log(response)
+    return response
+  }
+  catch (error) {
+    console.log(error)
+    return {error}
+  }
+}
+
 export async function postPackageRequest(_package, auth) {
   // console.log(_package)
 

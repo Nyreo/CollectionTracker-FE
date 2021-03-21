@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: 0,
   },
+  container: {
+    maxHeight: "75vh",
+    height: '100%',
+  },
   title: {
     textTransform: "capitalize",
     color: colourTheme.text.main,
@@ -46,16 +50,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const renderUserpage = (userType, classes) => {
-  switch(userType) {
+const renderUserpage = (token, classes,) => {
+
+  if(!token) return <AnonHome classes={classes} />
+
+  switch(token.userDetails.userType) {
     case 'customer':
-      return <CustomerHome />
+      return <CustomerHome token={token}/>
     case 'courier':
-      return <CourierHome />
+      return <CourierHome token={token}/>
     case 'manager':
       break;
-    default:
-      return <AnonHome classes={classes}/>
   }
 }
 
@@ -66,8 +71,8 @@ const Home = ({token}) => {
   const userType = token ? token.userDetails.userType : null
 
   return (
-    <Container>
-      {renderUserpage(userType, classes)}
+    <Container className={classes.container}>
+      {renderUserpage(token, classes)}
     </Container>
     
   )

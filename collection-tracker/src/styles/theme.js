@@ -20,6 +20,11 @@ const colourTheme = {
     hover: 'whitesmoke',
     text: 'whitesmoke',
     textHover: 'rgb(116, 0, 184)'
+  },
+  status: {
+    ndis: '#A8A8A8',
+    dis: '#F6B272',
+    del: 'rgb(116, 0, 184)'
   }
 }
 

@@ -51,11 +51,20 @@ const useStyles = makeStyles((theme) => ({
   menuIcon: {
     marginRight: theme.spacing(1),
   },
+  homeButton: {
+    fontSize: 40,
+    '&:hover' : {
+      backgroundColor: colourTheme.button.hover,
+      color: colourTheme.button.textHover
+    }
+  },
   welcomeMessage: {
     margin: 'auto 20px',
     textTransform: 'capitalize',
-    fontSize: '1.2rem',
+    fontSize: '1.5rem',
     fontStyle: 'italic',
+    borderRight: 'whitesmoke 3px solid',
+    paddingRight: theme.spacing(2)
   },
   title: {
     color: 'whitesmoke',

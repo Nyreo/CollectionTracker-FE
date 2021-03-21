@@ -8,12 +8,13 @@ import headerImage from './images/header-photo.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    backgroundColor: 'rgba(116, 0, 184)',
     background: `linear-gradient(rgba(116, 0, 184, 0.7), rgba(83, 144, 217, 0.5)), url(${headerImage})`,
     backgroundPosition: '50% 50%',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     maxWidth: "100vw",
-    height: "100vh",
+    minHeight: '100vh',
     textAlign: "center",
   }
 }));

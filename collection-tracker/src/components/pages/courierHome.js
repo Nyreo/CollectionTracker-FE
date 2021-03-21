@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 
 // component imports
-import PackageTable from '../packageTable'
+import PackageList from '../packageList'
 
 const CourierHome = (props) => {
   return (
@@ -16,7 +16,7 @@ const CourierHome = (props) => {
         <h1>Courier Homepage</h1>
       </Grid>
       <Grid item xs={12}>
-        <PackageTable />
+        <PackageList />
       </Grid>
     </Grid>
   )
