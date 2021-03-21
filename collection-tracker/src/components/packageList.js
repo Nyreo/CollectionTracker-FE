@@ -19,8 +19,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PackageList({packages}) {
+export default function PackageList({packages, displayIcon}) {
   const classes = useStyles();
+
+  console.log(displayIcon)
 
   const renderPackages = () => {
 
@@ -37,7 +39,7 @@ export default function PackageList({packages}) {
     packages.forEach(_package => {
       _packages.push(
         <div key={`package${_package.trackingNumber}`}>
-          <PackageItem data={_package}  />
+          <PackageItem data={_package} displayIcon={displayIcon} />
           <Divider component="li" />
         </div>
       )  

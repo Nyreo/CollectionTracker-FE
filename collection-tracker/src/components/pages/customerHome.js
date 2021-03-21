@@ -81,6 +81,25 @@ const CustomerHome = ({token}) => {
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  // returns only the needed informatio from packages
+  const extractPackageData = () => {
+    // recpName, destPostcode, dateTime
+
+    const extractedData = packages.map(_package => {
+      const dateTime = new Date(_package.date).toLocaleString()
+
+      const newPackage = {
+        trackingNumber: _package._id,
+        status: _package.status,
+        "Recipient Name" : _package.recpName,
+        "Destination Postcode": _package.destPostcode,
+        "Added" : dateTime,
+      }
+      return newPackage
+    })
+    return extractedData
+  }
+
   useEffect(() => {
     console.log("Loaded Data!");
     console.log(packages)
@@ -106,7 +125,10 @@ const CustomerHome = ({token}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
-        <PackageList packages={packages}/>
+        <PackageList 
+          packages={packages ? extractPackageData() : null}
+          displayIcon={true}
+        />
       </Grid>
     </Grid>
   )

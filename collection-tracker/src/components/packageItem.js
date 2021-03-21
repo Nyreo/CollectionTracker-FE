@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     color: colourTheme.status.del
   },
   iconContainer: {
-    width: '17ch',
+    width: '20ch',
     display: 'flex',
     flexDirection: 'column',
     alignItems: "center",
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function PackageItem({data}) {
+export default function PackageItem({data, displayIcon}) {
 
   const classes = useStyles()
 
@@ -67,7 +67,7 @@ export default function PackageItem({data}) {
             <Typography className={classes.statusText}>{data.status}</Typography>
           </div>
         )
-      case 'dispatched':
+      case 'in-transit':
         return (
           <div className={classes.iconContainer}>
             <AddCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.dispatched}`} />
@@ -87,35 +87,33 @@ export default function PackageItem({data}) {
   }
 
   const renderItemData = () => {
-
     const {status, trackingNumber, ...newData} = data
     const keys = Object.keys(newData)
 
     return keys.map(key => {
-      if(key === "trackingNumber") {
-        return (
-          <Grid key={`${trackingNumber}.${key}`} item xs={12}>
-            <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
-            <Typography className={classes.trackingNumberValue} display='inline' >{data[key]}</Typography>
-          </Grid>
-        )
-      } else {
-        return (
-          <Grid key={`${data.trackingNumber}.${key}`} item xs={6} sm={3}>
-            <Typography >{key}</Typography>
-            <Typography >{data[key]}</Typography>
-          </Grid>
-        )
-      }
+      return (
+        <Grid key={`${trackingNumber}.${key}`} item xs={12} sm={3}>
+          <Typography >{key}</Typography>
+          <Typography >{data[key]}</Typography>
+        </Grid>
+      )
     })
   }
 
+  
+
+  console.log(displayIcon)
+
   return (
     <ListItem alignItems="flex-start" className={classes.root}>
-        {renderStatusIcon()}
-        <Grid container spacing={3}>
+      {displayIcon && renderStatusIcon()}
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
+          <Typography className={classes.trackingNumberValue} display='inline' >{data.trackingNumber}</Typography>
+        </Grid>
         {renderItemData()}
       </Grid>
-      </ListItem>
+    </ListItem>
   )
 }

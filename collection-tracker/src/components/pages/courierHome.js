@@ -121,7 +121,7 @@ const CourierHome = ({token}) => {
   }
 
   const handleTrackingSubmit = async () => {
-    const response = await patchPackageRequest(trackingNumber, "dispatched", token.authHeader)
+    const response = await patchPackageRequest(trackingNumber, "in-transit", token.authHeader)
 
     if(response.err) updateError(response.err)
     else {
@@ -137,7 +137,7 @@ const CourierHome = ({token}) => {
     const now = (new Date()).getTime()
 
     const extractedData = packages.map(_package => {
-      const rawElapsedTime = (now - _package.date) / 1000 // seconds
+      const rawElapsedTime = now - _package.date
       const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
 
       const newPackage = {
@@ -150,6 +150,8 @@ const CourierHome = ({token}) => {
       }
       return newPackage
     })
+
+    console.log(extractedData)
     return extractedData
   }
 
@@ -199,7 +201,7 @@ const CourierHome = ({token}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
-      <PackageList packages={packages ? extractPackageData() : {}}/>
+      <PackageList packages={packages ? extractPackageData() : null} displayIcon={false}/>
       </Grid>
     </Grid>
   )
