@@ -8,7 +8,6 @@ const generateToken = (userDetails) => {
 
 export async function loginRequest(credentials) {
   const authHeader = generateToken(credentials)
-
   try {
     const response = await axios.get(`${baseuri}/accounts`, 
     {
@@ -27,8 +26,6 @@ export async function loginRequest(credentials) {
 }
 
 export async function registerRequest(credentials) {
-  console.log(credentials) // remove prod
-
   try {
     const response = await axios.post(`${baseuri}/accounts`, credentials)
 
@@ -40,13 +37,9 @@ export async function registerRequest(credentials) {
   }
 }
 
-export async function getPackageRequest(username, auth) {
-
-  console.log(`username: ${username}`);
-  console.log(`auth ${auth}`)
-
+export async function getPackageRequest(username, auth, courier="false") {
   try {
-    const response = await axios.get(`${baseuri}/packages/${username}`, 
+    const response = await axios.get(`${baseuri}/packages/${username}?courier=${courier}`, 
     {
       headers: {
         'Authorization': auth
@@ -63,10 +56,6 @@ export async function getPackageRequest(username, auth) {
 }
 
 export async function postPackageRequest(_package, auth) {
-  // console.log(_package)
-
-  console.log(`authHeader: ${auth}`)
-
   try {
     const response = await axios.post(`${baseuri}/packages`, _package,
     {
@@ -78,7 +67,18 @@ export async function postPackageRequest(_package, auth) {
     console.log(response)
     return response
   } catch (error) {
-    console.log(error)
+    console.log(`error ${error}`)
     return {error}
   }
+}
+
+export async function patchPackageRequest(trackingNumber, status, auth) {
+  return axios.patch(`${baseuri}/packages/tracking/${trackingNumber}`, {status},
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  .then(response => response.data)
+  .catch(error => error.response.data)
 }

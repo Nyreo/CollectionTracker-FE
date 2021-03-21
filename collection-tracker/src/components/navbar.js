@@ -209,6 +209,67 @@ export default function NavBar({token, clearToken}) {
     </Menu>
   );
 
+  const renderNavButtons = token => {
+
+    const userType = token ? token.userDetails.userType : ''
+
+    switch(userType) {
+      case 'customer':
+        return (
+          <>
+            <Typography className={classes.welcomeMessage}>Welcome {token.userDetails.username}</Typography>
+            <Link to='/send' className={classes.link}>
+              <Button 
+                color="inherit" 
+                className={classes.menuButton} 
+              ><AddBoxIcon className={classes.menuIcon} />
+                Send Package
+              </Button>
+            </Link>
+            <Button 
+              color="inherit" 
+              className={classes.menuButton}
+              onClick={clearToken}  
+            ><MeetingRoomIcon className={classes.menuIcon}/>
+              Logout
+            </Button>
+          </>
+        )
+      case 'courier': 
+        return (
+          <>
+            <Typography className={classes.welcomeMessage}>Welcome {token.userDetails.username}</Typography>
+            <Link to='/send' className={classes.link}>
+            </Link>
+            <Button 
+              color="inherit" 
+              className={classes.menuButton}
+              onClick={clearToken}  
+            ><MeetingRoomIcon className={classes.menuIcon}/>
+              Logout
+            </Button>
+          </>
+        )
+      default:
+        return (
+          <>
+            <Link to='/login' className={classes.link}>
+              <Button 
+                color="inherit" 
+                className={classes.menuButton}
+              >Login</Button>
+            </Link>
+            <Link to='/register' className={classes.link}>
+              <Button 
+                color="inherit" 
+                className={classes.menuButton}>
+              Register</Button>
+            </Link>
+          </>
+        )
+    }
+  }
+
   return (
     <div className={classes.grow}>
       <AppBar className={classes.root} position="static">
@@ -226,81 +287,9 @@ export default function NavBar({token, clearToken}) {
           <Typography className={classes.title} variant="h6" noWrap>
             Collection Tracker
           </Typography>
-          {/* <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            { token ? (
-              // auth
-              <>
-                <Typography className={classes.welcomeMessage}>Welcome {token.userDetails.username}</Typography>
-                <Link to='/send' className={classes.link}>
-                  <Button 
-                    color="inherit" 
-                    className={classes.menuButton} 
-                  ><AddBoxIcon className={classes.menuIcon} />
-                    Send Package
-                  </Button>
-                </Link>
-                <Button 
-                  color="inherit" 
-                  className={classes.menuButton}
-                  onClick={clearToken}  
-                ><MeetingRoomIcon className={classes.menuIcon}/>
-                  Logout
-                </Button>
-                
-              </>
-            ) : (
-              // not auth
-              <>
-                <Link to='/login' className={classes.link}>
-                  <Button 
-                    color="inherit" 
-                    className={classes.menuButton}
-                  >Login</Button>
-                </Link>
-                <Link to='/register' className={classes.link}>
-                  <Button 
-                    color="inherit" 
-                    className={classes.menuButton}>
-                  Register</Button>
-                </Link>
-              </>
-            )
-            }
-            
-            {/* <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={3} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton> */}
+            { renderNavButtons(token) }
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

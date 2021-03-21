@@ -61,14 +61,14 @@ const renderUserpage = (token, classes,) => {
       return <CourierHome token={token}/>
     case 'manager':
       break;
+    default:
+      return <AnonHome classes={classes} />
   }
 }
 
 const Home = ({token}) => {
 
   const classes = useStyles();
-
-  const userType = token ? token.userDetails.userType : null
 
   return (
     <Container className={classes.container}>

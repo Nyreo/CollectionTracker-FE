@@ -65,6 +65,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const fetchPackages = async (token, setPackages, setLoading) => {
+  const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader)
+  
+  if(error) console.log(error)
+  else setPackages(data.data)
+
+  setLoading(false)
+}
+
 const CustomerHome = ({token}) => {
   
   const classes = useStyles()
@@ -72,13 +81,23 @@ const CustomerHome = ({token}) => {
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  // returns only the needed informatio from packages
+  const extractPackageData = () => {
+    // recpName, destPostcode, dateTime
 
-  const fetchPackages = async () => {
-    const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader)
-    
-    if(error) console.log(error)
-    else setPackages(data.data)
-    setLoading(false)
+    const extractedData = packages.map(_package => {
+      const dateTime = new Date(_package.date).toLocaleString()
+
+      const newPackage = {
+        trackingNumber: _package._id,
+        status: _package.status,
+        "Recipient Name" : _package.recpName,
+        "Destination Postcode": _package.destPostcode,
+        "Added" : dateTime,
+      }
+      return newPackage
+    })
+    return extractedData
   }
 
   useEffect(() => {
@@ -87,9 +106,8 @@ const CustomerHome = ({token}) => {
   }, [packages])
 
   useEffect(() => {
-    setLoading(true)
-    fetchPackages()
-  }, [])
+    fetchPackages(token ,setPackages, setLoading)
+  }, [token])
   
   return (
     <Grid className={classes.root} >
@@ -107,7 +125,10 @@ const CustomerHome = ({token}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
-        <PackageList packages={packages}/>
+        <PackageList 
+          packages={packages ? extractPackageData() : null}
+          displayIcon={true}
+        />
       </Grid>
     </Grid>
   )

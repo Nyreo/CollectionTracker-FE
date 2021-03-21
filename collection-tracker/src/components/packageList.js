@@ -12,14 +12,14 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
 
     overflowY: 'scroll',
-    minHeight: '25%',
+    minHeight: '250px',
   },
   inline: {
     display: 'inline',
   },
 }));
 
-export default function PackageList({packages}) {
+export default function PackageList({packages, displayIcon}) {
   const classes = useStyles();
 
   const renderPackages = () => {
@@ -36,8 +36,8 @@ export default function PackageList({packages}) {
 
     packages.forEach(_package => {
       _packages.push(
-        <div key={`package${_package._id}`}>
-          <PackageItem data={_package}  />
+        <div key={`package${_package.trackingNumber}`}>
+          <PackageItem data={_package} displayIcon={displayIcon} />
           <Divider component="li" />
         </div>
       )  

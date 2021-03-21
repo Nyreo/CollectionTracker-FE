@@ -5,7 +5,6 @@ import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 
 // status icons
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     color: colourTheme.status.del
   },
   iconContainer: {
-    width: '17ch',
+    width: '20ch',
     display: 'flex',
     flexDirection: 'column',
     alignItems: "center",
@@ -53,71 +52,64 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const renderStatusIcon = (status, classes) => {
-  switch(status) {
-    case 'not-dispatched':
-      return (
-        <div className={classes.iconContainer}>
-          <RemoveCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.notDispatched}`} />
-          <Typography className={classes.statusText}>{status}</Typography>
-        </div>
-      )
-    case 'dispatched':
-      return (
-        <div className={classes.iconContainer}>
-          <AddCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.dispatched}`} />
-          <Typography className={classes.statusText}>{status}</Typography>
-        </div>
-      )
-    case 'delivered':
-      return (
-        <div className={classes.iconContainer}>
-          <CheckCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.delivered}`} />
-          <Typography className={classes.statusText}>{status}</Typography>
-        </div>
-      )
-    default:
-      break;
-  }
-}
 
-export default function PackageItem({data}) {
+
+export default function PackageItem({data, displayIcon}) {
 
   const classes = useStyles()
 
+  const renderStatusIcon = () => {
+    switch(data.status) {
+      case 'not-dispatched':
+        return (
+          <div className={classes.iconContainer}>
+            <RemoveCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.notDispatched}`} />
+            <Typography className={classes.statusText}>{data.status}</Typography>
+          </div>
+        )
+      case 'in-transit':
+        return (
+          <div className={classes.iconContainer}>
+            <AddCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.dispatched}`} />
+            <Typography className={classes.statusText}>{data.status}</Typography>
+          </div>
+        )
+      case 'delivered':
+        return (
+          <div className={classes.iconContainer}>
+            <CheckCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.delivered}`} />
+            <Typography className={classes.statusText}>{data.status}</Typography>
+          </div>
+        )
+      default:
+        break;
+    }
+  }
+
+  const renderItemData = () => {
+    const {status, trackingNumber, ...newData} = data
+    const keys = Object.keys(newData)
+
+    return keys.map(key => {
+      return (
+        <Grid key={`${trackingNumber}.${key}`} item xs={12} sm={3}>
+          <Typography >{key}</Typography>
+          <Typography >{data[key]}</Typography>
+        </Grid>
+      )
+    })
+  }
+
   return (
     <ListItem alignItems="flex-start" className={classes.root}>
-        {renderStatusIcon(data.status, classes)}
-        <Grid container spacing={3}>
+      {displayIcon && renderStatusIcon()}
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
-          <Typography className={classes.trackingNumberValue} display='inline' >{data._id}</Typography>
+          <Typography className={classes.trackingNumberValue} display='inline' >{data.trackingNumber}</Typography>
         </Grid>
-        <Grid item xs={6} md={6}>
-          <Typography display='inline'>Added: </Typography>
-          <Typography display='inline' >{new Date(data.date).toLocaleString()}</Typography>
-        </Grid>
-        <Grid item xs={6} md={6}>
-          <Typography display='inline'>Address </Typography>
-          <Typography display='inline' >{data.address}</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Sender Postcode</Typography>
-          <Typography >{data.sendPostcode}</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Destination Postcode</Typography>
-          <Typography >{data.destPostcode}</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Package Weight</Typography>
-          <Typography >{data.weight}kg</Typography>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Typography >Destination Postcode</Typography>
-          <Typography >{data.destPostcode}</Typography>
-        </Grid>
+        {renderItemData()}
       </Grid>
-      </ListItem>
+    </ListItem>
   )
 }
