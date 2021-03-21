@@ -100,10 +100,6 @@ export default function PackageItem({data, displayIcon}) {
     })
   }
 
-  
-
-  console.log(displayIcon)
-
   return (
     <ListItem alignItems="flex-start" className={classes.root}>
       {displayIcon && renderStatusIcon()}

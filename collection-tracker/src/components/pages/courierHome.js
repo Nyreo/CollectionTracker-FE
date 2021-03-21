@@ -120,7 +120,28 @@ const CourierHome = ({token}) => {
     setTrackingNumber(e.target.value)
   }
 
+  // performs client side validation on tracking number
+  const validateTrackingNumber = () => {
+    // check if empty
+    if(trackingNumber === '') throw new Error("Please enter a tracking number.");
+    
+    // check if it already exists in package list
+    packages.forEach(_package => {
+      if(_package._id === trackingNumber) throw new Error("You have already selected that package.");
+    })
+
+
+  }
+
   const handleTrackingSubmit = async () => {
+    // validate
+    try {
+      validateTrackingNumber()
+    } catch(err) {
+      updateError(err.message)
+      return
+    }
+
     const response = await patchPackageRequest(trackingNumber, "in-transit", token.authHeader)
 
     if(response.err) updateError(response.err)
@@ -150,14 +171,11 @@ const CourierHome = ({token}) => {
       }
       return newPackage
     })
-
-    console.log(extractedData)
     return extractedData
   }
 
   useEffect(() => {
     console.log("Loaded Data!");
-    console.log(packages)
   }, [packages])
 
   useEffect(() => {

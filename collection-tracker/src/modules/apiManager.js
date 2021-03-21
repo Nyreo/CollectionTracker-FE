@@ -8,7 +8,6 @@ const generateToken = (userDetails) => {
 
 export async function loginRequest(credentials) {
   const authHeader = generateToken(credentials)
-
   try {
     const response = await axios.get(`${baseuri}/accounts`, 
     {
@@ -27,8 +26,6 @@ export async function loginRequest(credentials) {
 }
 
 export async function registerRequest(credentials) {
-  console.log(credentials) // remove prod
-
   try {
     const response = await axios.post(`${baseuri}/accounts`, credentials)
 
@@ -41,11 +38,6 @@ export async function registerRequest(credentials) {
 }
 
 export async function getPackageRequest(username, auth, courier="false") {
-
-  console.log(`username: ${username}`);
-  console.log(`auth ${auth}`)
-  console.log(`courier: ${courier}`)
-
   try {
     const response = await axios.get(`${baseuri}/packages/${username}?courier=${courier}`, 
     {
@@ -64,10 +56,6 @@ export async function getPackageRequest(username, auth, courier="false") {
 }
 
 export async function postPackageRequest(_package, auth) {
-  // console.log(_package)
-
-  console.log(`authHeader: ${auth}`)
-
   try {
     const response = await axios.post(`${baseuri}/packages`, _package,
     {

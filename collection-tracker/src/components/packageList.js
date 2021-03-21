@@ -22,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
 export default function PackageList({packages, displayIcon}) {
   const classes = useStyles();
 
-  console.log(displayIcon)
-
   const renderPackages = () => {
 
     if(!packages.length) {
