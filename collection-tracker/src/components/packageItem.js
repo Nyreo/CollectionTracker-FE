@@ -16,12 +16,19 @@ import colourTheme from '../styles/theme'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    }
   },
   inline: {
     display: 'inline',
   },
   statusIcon: {
+    fontSize: 60,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 37,
+    }
   },
   notDispatched: {
     color: colourTheme.status.ndis
@@ -38,20 +45,62 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: "center",
     justifyContent: 'center',
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      position: 'absolute',
+      right: -4,
+      top: 4,
+      width: '25%',
+      backgroundColor: 'white',
+    }
   },
   statusText: {
     fontSize: '18px',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '9px',
+    }
+  },
+  tracking: {
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: '10px',
+      backgroundColor: colourTheme.primary.main,
+      borderRadius: '5px',
+      color: 'white',
+    }
   },
   trackingNumberHeader: {
     fontWeight: 700,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em',
+    }
   },
   trackingNumberValue: {
     color: colourTheme.primary.main,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.8em',
+      marginBottom: '10px',
+      color: 'whitesmoke',
+    }
+  },
+  entry: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'inline-flex',
+      justifyContent: 'space-between',
+    }
+  },
+  entryText: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.8em'
+    }
+  },
+  entryHeader: {
+    fontWeight: 700,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.8em'
+    }
   }
 }));
-
 
 
 export default function PackageItem({data, displayIcon}) {
@@ -63,21 +112,21 @@ export default function PackageItem({data, displayIcon}) {
       case 'not-dispatched':
         return (
           <div className={classes.iconContainer}>
-            <RemoveCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.notDispatched}`} />
+            <RemoveCircleIcon className={`${classes.statusIcon} ${classes.notDispatched}`} />
             <Typography className={classes.statusText}>{data.status}</Typography>
           </div>
         )
       case 'in-transit':
         return (
           <div className={classes.iconContainer}>
-            <AddCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.dispatched}`} />
+            <AddCircleIcon className={`${classes.statusIcon} ${classes.dispatched}`} />
             <Typography className={classes.statusText}>{data.status}</Typography>
           </div>
         )
       case 'delivered':
         return (
           <div className={classes.iconContainer}>
-            <CheckCircleIcon style={{fontSize: 60}} className={`${classes.statusIcon} ${classes.delivered}`} />
+            <CheckCircleIcon className={`${classes.statusIcon} ${classes.delivered}`} />
             <Typography className={classes.statusText}>{data.status}</Typography>
           </div>
         )
@@ -92,9 +141,9 @@ export default function PackageItem({data, displayIcon}) {
 
     return keys.map(key => {
       return (
-        <Grid key={`${trackingNumber}.${key}`} item xs={12} sm={3}>
-          <Typography >{key}</Typography>
-          <Typography >{data[key]}</Typography>
+        <Grid key={`${trackingNumber}.${key}`} item xs={12} sm={3} className={classes.entry}>
+          <Typography className={classes.entryHeader}>{key}</Typography>
+          <Typography className={classes.entryText}>{data[key]}</Typography>
         </Grid>
       )
     })
@@ -103,8 +152,8 @@ export default function PackageItem({data, displayIcon}) {
   return (
     <ListItem alignItems="flex-start" className={classes.root}>
       {displayIcon && renderStatusIcon()}
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
+      <Grid container spacing={1}>
+        <Grid className={classes.tracking} item xs={12}>
           <Typography className={classes.trackingNumberHeader} display='inline' variant='h6'>Tracking Number: </Typography>
           <Typography className={classes.trackingNumberValue} display='inline' >{data.trackingNumber}</Typography>
         </Grid>

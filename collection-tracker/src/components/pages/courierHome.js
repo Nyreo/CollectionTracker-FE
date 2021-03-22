@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: '3em',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.8em',
+    }
   },
   intro: {
     flex: '0 0 10%',
@@ -41,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   subText: {
     fontSize: '1.5em',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em',
+    }
   },
   dataDisplay: {
     flex: '1',
@@ -82,12 +88,18 @@ const useStyles = makeStyles((theme) => ({
   },
   trackingIcon: {
     fontSize: '2em', 
-    color: colourTheme.primary.main
+    color: colourTheme.primary.main,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em',
+    }
   },
   input: {
     fontSize: '2em',
     marginLeft: "1em",
     flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em',
+    }
   },
 }));
 
@@ -211,7 +223,7 @@ const CourierHome = ({token, updateNotification}) => {
             aria-label="enter-trackingnumber"
             onClick = {handleTrackingSubmit}
           >
-            <SearchIcon style={{fontSize: '2em'}} />
+            <SearchIcon className={classes.trackingIcon} />
           </IconButton>
         </Paper>
       </Grid>   

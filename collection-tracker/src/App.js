@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 
 import { makeStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 // router
 import PageRouter from './components/pagerouter';
@@ -21,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   }
 }));
+
+const theme = createMuiTheme()
 
 const App = () => {
 
@@ -60,21 +63,26 @@ const App = () => {
   }, [token])
 
 
+
+
   return (
-    <div className={classes.root}>
-      <FeedbackBox 
-        message={notification.message} 
-        type={notification.type}
-        open={open}
-        setOpen={(val) => setOpen(val)}
-      />
-      <PageRouter 
-        token={token} 
-        saveToken={saveToken}
-        clearToken={clearToken}
-        updateNotification={updateNotification}  
-      />
-    </div>
+    <MuiThemeProvider theme={theme}>
+      <div className={classes.root}>
+        <FeedbackBox 
+          message={notification.message} 
+          type={notification.type}
+          open={open}
+          setOpen={(val) => setOpen(val)}
+        />
+        <PageRouter 
+          token={token} 
+          saveToken={saveToken}
+          clearToken={clearToken}
+          updateNotification={updateNotification}  
+        />
+      </div>
+    </MuiThemeProvider>
+    
   )
 }
 

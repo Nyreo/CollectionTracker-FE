@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,12 +34,20 @@ const useStyles = makeStyles((theme) => ({
 
     boxShadow: '2px 2px solid black',
     paddingBottom: "20px",
+    [theme.breakpoints.down('sm')]: {
+      width:'80%',
+      height: '80%',
+      top: '55%'
+    }
   },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '0'
+    }
   },
   avatar: {
     margin: theme.spacing(1),
@@ -50,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '1em',
     width: '100%',
     textAlign: 'left',
+    [theme.breakpoints.down('sm')]: {
+      height: 40,
+    }
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -61,6 +71,14 @@ const useStyles = makeStyles((theme) => ({
     '&:hover' : {
       backgroundColor: colourTheme.primary.hover
     }
+  },
+  input: {
+    [theme.breakpoints.down('sm')]: {
+      height: 2,
+    }
+  },
+  inputbox: {
+    marginBottom: '0',
   },
 }));
 
@@ -144,6 +162,12 @@ export default function Register({saveToken, history}) {
             autoFocus
             value={credentials.username}
             onChange={handleCredentialUpdate}
+            inputProps = {
+              {className: classes.input}
+            }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <TextField
             variant="outlined"
@@ -157,6 +181,13 @@ export default function Register({saveToken, history}) {
             autoComplete="current-password"
             value={credentials.password}
             onChange={handleCredentialUpdate}
+            className={classes.inputbox}
+            inputProps = {
+              {className: classes.input}
+            }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <TextField
             variant="outlined"
@@ -170,6 +201,13 @@ export default function Register({saveToken, history}) {
             autoComplete="repeat-password"
             value={credentials.repeatpassword}
             onChange={handleCredentialUpdate}
+            className={classes.inputbox}
+            inputProps = {
+              {className: classes.input}
+            }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <Select
           className={classes.select}
@@ -180,6 +218,9 @@ export default function Register({saveToken, history}) {
           defaultValue={"Customer"}
           value={credentials.userType}
           onChange={handleCredentialUpdate}
+          InputLabelProps={{
+            shrink: true
+          }}
           >
             <MenuItem value={"customer"}>Customer</MenuItem>
             <MenuItem value={"courier"}>Courier</MenuItem>
@@ -200,11 +241,6 @@ export default function Register({saveToken, history}) {
           </Link>
         </form>
       </div>
-      <Box mt={8}>
-        <Typography variant="body2" color="textSecondary" align="center">
-          {'M137CEM Coursework 2021'}
-        </Typography>
-      </Box>
     </Container>
   );
 }

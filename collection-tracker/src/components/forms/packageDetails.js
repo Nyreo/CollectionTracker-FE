@@ -6,8 +6,28 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  title: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.2em',
+      marginTop: '10px'
+    }
+  },
+  input: {
+    [theme.breakpoints.down('sm')]: {
+      height: 7,
+      fontSize: '14px',
+      width: '100%',
+    }
+  },
+}));
+
 
 const PackageDetailsForm = ({_package, setPackage}) => {
+  
+  const classes = useStyles()
 
   const maxWeight = 20
 
@@ -23,15 +43,16 @@ const PackageDetailsForm = ({_package, setPackage}) => {
 
   return (
     <>
-      <Typography variant="h6">
+      <Typography className={classes.title} variant="h6">
         Package Details
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={9}>
-          <Typography id="package-slider-text" gutterBottom style={{textAlign: 'left'}}>
+          <Typography id="package-slider-text" gutterBottom style={{textAlign: 'left', paddingTop: '10px'}}>
           Package Weight (kg)
         </Typography>
         <Slider
+          className={classes.inputbox}
           aria-labelledby="package-slider"
           max={maxWeight}
           value={_package.weight}
@@ -42,6 +63,7 @@ const PackageDetailsForm = ({_package, setPackage}) => {
         </Grid>
         <Grid item xs={12} sm={3}>
           <OutlinedInput
+            className={classes.inputbox}
             id="manual-weight-input"
             value={_package.weight}
             onChange={handleChange}
@@ -51,6 +73,9 @@ const PackageDetailsForm = ({_package, setPackage}) => {
               'aria-label': 'weight',
             }}
             labelWidth={0}
+            inputProps = {
+              {className: classes.input}
+            }
           />
           <FormHelperText id="weight-manual-input-text">Weight</FormHelperText>
         </Grid>
