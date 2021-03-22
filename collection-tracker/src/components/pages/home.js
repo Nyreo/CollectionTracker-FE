@@ -18,24 +18,38 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
     flexGrow: 1,
     padding: 0,
+    [theme.breakpoints.down('xs')]: {
+      width: '80%',
+    }
   },
   container: {
     maxHeight: "75vh",
     height: '100%',
   },
   title: {
-    textTransform: "capitalize",
     color: colourTheme.text.main,
     textAlign : 'center',
-    fontSize: '6rem',
+    fontSize: '4em',
     marginBottom : 0,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '3em'
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: "3em",
+    }
   },
   titleText: {
     fontSize: "2em", 
     color: colourTheme.text.main,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "1.5em",
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: "1.2em",
+    }
   },
   subButton: {
-    fontSize: "2em",
+    fontSize: "1.5em",
     margin: "20px auto",
     textTransform: "capitalize",
     color: colourTheme.text.main,
@@ -46,7 +60,10 @@ const useStyles = makeStyles((theme) => ({
     },
     fontWeight: 700,
     borderRadius: "10px",
-    padding: "5px 25px"
+    padding: "5px 25px",
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '1.3em',
+    }
   }
 }));
 

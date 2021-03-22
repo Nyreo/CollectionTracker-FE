@@ -42,9 +42,20 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
+    [theme.breakpoints.down('sm')]: {
+      maxHeight: '75vh'
+    }
+  },
+  title : {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.5em'
+    }
   },
   stepper: {
     padding: theme.spacing(3, 0, 5),
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   buttons: {
     display: 'flex',
@@ -66,10 +77,30 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: colourTheme.button.hover,
       color : colourTheme.button.textHover
     }
+  },
+  mastif: {
+    marginTop: '2rem', 
+    color:'grey',
+    [theme.breakpoints.down('sm')]: {
+      fontSize:'0.8em',
+      marginTop: '10px'
+    }
+  },
+  thankYou: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: '10px',
+      fontWeight: 700,
+      fontSize: '1.2em'
+    }
+  },
+  thankYouSub: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em'
+    }
   }
 }));
 
-const steps = ['Shipping Address', 'Package Details', 'Review'];
+const steps = ['Shipping Address', 'Package Details', 'Review Details'];
 
 function getStepContent(step, _package, updatePackage) {
   switch (step) {
@@ -136,7 +167,7 @@ export default function SendPackage({token}) {
       <CssBaseline />
       <main className={classes.layout}>
         <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
+          <Typography className={classes.title} component="h1" variant="h4" align="center">
             Sending a Package.
           </Typography>
           { loading && (
@@ -145,17 +176,17 @@ export default function SendPackage({token}) {
           <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((label) => (
               <Step style={{color: 'black'}} key={label}>
-                <StepLabel>{label}</StepLabel>
+                <StepLabel >{label}</StepLabel>
               </Step>
             ))}
           </Stepper>
           <>
             {activeStep === steps.length ? (
               <>
-                <Typography variant="h5" gutterBottom>
+                <Typography className={classes.thankYou} variant="h5" gutterBottom>
                   Thank you for you package.
                 </Typography>
-                <Typography variant="subtitle1">
+                <Typography className={classes.thankYouSub} variant="subtitle1">
                   We have received your request! This package (and all other submitted packages) can be tracked on the 
                   Home page. The tracking number for this request is 
                   <Link to='/'>
@@ -182,7 +213,7 @@ export default function SendPackage({token}) {
                   </Button>
                 </div>
                 {activeStep !== 0 && (
-                  <Typography style={{marginTop: '2rem', color:'grey'}}>If you want to change any details, simply use the back button</Typography>
+                  <Typography className={classes.mastif}>If you want to change any details, simply use the back button</Typography>
                 )}
               </>
             )}

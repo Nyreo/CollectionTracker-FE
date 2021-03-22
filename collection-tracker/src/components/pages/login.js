@@ -11,10 +11,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-// import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '50%',
 
     boxShadow: '2px 2px solid black',
+    [theme.breakpoints.down('sm')]: {
+      width:'80%',
+      height: '65%',
+      top: '55%'
+    }
   },
   error: {
     color: 'red',
@@ -46,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '10px'
+    }
   },
   avatar: {
     margin: theme.spacing(1),
@@ -62,6 +66,21 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: colourTheme.primary.hover
     }
   },
+  input: {
+    [theme.breakpoints.down('sm')]: {
+      height: 2,
+    }
+  },
+  inputbox: {
+    marginBottom: '0',
+  },
+  loading: {
+    [theme.breakpoints.down('sm')]: {
+      position: 'absolute',
+      top: -50,
+      color: 'white'
+    }
+  }
 }));
 
 export default function Login({history, token, saveToken, updateNotification}) {
@@ -121,7 +140,7 @@ export default function Login({history, token, saveToken, updateNotification}) {
         </Typography>
         {/* loading symbol */}
         {
-          loading ? (<CircularProgress />) : null
+          loading ? (<CircularProgress className={classes.loading}/>) : null
         }
         <form className={classes.form} noValidate>
           <TextField
@@ -137,6 +156,12 @@ export default function Login({history, token, saveToken, updateNotification}) {
             onChange={handleCredentialUpdate}
             autoComplete="username"
             autoFocus
+            inputProps = {
+              {className: classes.input}
+            }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <TextField
             className={classes.inputbox}
@@ -151,10 +176,12 @@ export default function Login({history, token, saveToken, updateNotification}) {
             value={credentials.password}
             onChange={handleCredentialUpdate}
             autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            inputProps = {
+              {className: classes.input}
+            }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <Button
             type="submit"
@@ -171,11 +198,6 @@ export default function Login({history, token, saveToken, updateNotification}) {
           </Link>
         </form>
       </div>
-      <Box mt={8}>
-        <Typography variant="body2" color="textSecondary" align="center">
-          {'M137CEM Coursework 2021'}
-        </Typography>
-      </Box>
         
     </Container>
     

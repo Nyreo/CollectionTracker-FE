@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: '3em',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.8em',
+    }
   },
   intro: {
     flex: '0 0 10%',
@@ -32,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
   subText: {
     fontSize: '1.5em',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em',
+    }
   },
   dataDisplay: {
     flex: '1',
@@ -116,10 +122,6 @@ const CustomerHome = ({token}) => {
         <p className={classes.subText}>
           Below is a list of all the packages you have added to our system.
         </p>
-      </Grid>
-      <Grid className={classes.dataFilter} item xs={12}> 
-        <p className={classes.filterItem} style={{flex: '0 0 70%'}}>Search</p>
-        <p className={classes.filterItem} style={{flex: '0 0 25%'}}>Order</p>
       </Grid>    
       <Grid className={classes.dataDisplay} item xs={12}>
         { loading && (
