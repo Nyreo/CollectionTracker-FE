@@ -261,7 +261,7 @@ export default function NavBar({token, clearToken, history}) {
             { renderNavButtons(token) }
           </div>
           <div className={classes.sectionMobile}>
-            { token && token.userDetails.userType && (
+            { token && (token.userDetails.userType === 'customer') && (
             <Link to='/send'>
               <IconButton
                 aria-label="send package"
