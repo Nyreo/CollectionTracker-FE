@@ -3,11 +3,11 @@ Front-end repository for Joseph Mitchell's M137CEM Coursework Submission.
 
 ## Complete Tasks
 
-## Stage 1 :fa-check: [complete]
+## Stage 1 [complete]
 
 The first part of the project is to build a system that records parcels being dispatched.
 
-### Part 1 :fa-check: [complete]
+### Part 1 [complete]
 
 Users need to be logged in to access any functionality. There should be a **Send parcel** button on the _Homepage_. This takes the user to a screen where they enter the details of the parcel they want to send. They need to provide the following information:
 
@@ -24,7 +24,7 @@ When the parcel is added, the following extra information needs to be stored in 
 3. The parcel status (set this to `not-dispatched`.
 4. A unique tracking number (letters an numbers).
 
-### Part 2 :fa-check: [complete]
+### Part 2 [complete]
 
 The _Homepage_ should list the packages added by the logged-in user. This should include:
 
@@ -33,7 +33,7 @@ The _Homepage_ should list the packages added by the logged-in user. This should
 3. The date and time added.
 4. The parcel status.
 
-### Part 3 :fa-check: [complete]
+### Part 3 [complete]
 
 Now the courier logs in. On their _homepage_ they see a textbox where they enter the tracking number for a parcel. This needs to match a parcel that has the status of `not-dispatched` or it throws and error and asks for the tracking number again.
 
