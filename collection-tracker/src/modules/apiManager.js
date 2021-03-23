@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseuri = "http://localhost:8080/v1"
+const baseuri = "http://localhost:8080/v2"
 
 const generateToken = (userDetails) => {
   return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;

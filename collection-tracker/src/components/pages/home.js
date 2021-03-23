@@ -83,13 +83,13 @@ const renderUserpage = (_props, classes, ) => {
   }
 }
 
-const Home = ({token, updateNotification}) => {
+const Home = ({token, updateNotification, history}) => {
 
   const classes = useStyles();
 
   return (
     <Container className={classes.container}>
-      {renderUserpage({token, updateNotification}, classes)}
+      {renderUserpage({token, updateNotification, history}, classes)}
     </Container>
     
   )

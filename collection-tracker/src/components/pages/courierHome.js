@@ -112,7 +112,7 @@ const fetchPackages = async (token, setPackages, setLoading) => {
   setLoading(false)
 }
 
-const CourierHome = ({token, updateNotification}) => {
+const CourierHome = ({token, updateNotification, history}) => {
   
   const classes = useStyles()
 
@@ -125,7 +125,7 @@ const CourierHome = ({token, updateNotification}) => {
     updateNotification(notification)
   }
 
-  const handleChange = (e) => {
+  const handleTrackingChange = (e) => {
     setTrackingNumber(e.target.value)
   }
 
@@ -133,11 +133,14 @@ const CourierHome = ({token, updateNotification}) => {
   const validateTrackingNumber = () => {
     // check if empty
     if(trackingNumber === '') throw new Error("Please enter a tracking number.");
-    
-    // check if it already exists in package list
-    packages.forEach(_package => {
-      if(_package._id === trackingNumber) throw new Error("You have already selected that package.");
-    })
+  }
+
+  // check if package with trackingnumber has already been selected (dispatched)
+  const checkExistingPackages = () => {
+    for(const _package of packages) {
+      if(_package._id === trackingNumber) return true
+    }
+    return false
   }
 
   const handleTrackingSubmit = async () => {
@@ -149,30 +152,36 @@ const CourierHome = ({token, updateNotification}) => {
       return
     }
 
-    const response = await patchPackageRequest(trackingNumber, "in-transit", token.authHeader)
+    if(!checkExistingPackages()) {
+      const response = await patchPackageRequest(trackingNumber, "in-transit", token.authHeader)
 
-    if(response.err) updateError(response.err)
-    else {
-      console.log(response)
-
-      // set notiifcation
-      const notification = {message:'Package has been selected', type:'success'}
-      updateNotification(notification)
-
-      // reset tracking number
-      setTrackingNumber('')
-
-      fetchPackages(token, setPackages, setLoading)
+      if(response.err) updateError(response.err)
+      else {
+        console.log(response)
+  
+        // set notiifcation
+        const notification = {message:'Package has been selected', type:'success'}
+        updateNotification(notification)
+  
+        // reset tracking number
+        setTrackingNumber('')
+  
+        fetchPackages(token, setPackages, setLoading)
+      }
+    } else {
+      console.log("package already exists... loading delivery")
+      history.push('/delivery')
     }
+
+    
   }
 
   // returns only the needed informatio from packages
   const extractPackageData = () => {
     // recpName, destPostcode, weight, elapsedTime
-
     const now = (new Date()).getTime()
 
-    const extractedData = packages.map(_package => {
+    return packages.map(_package => {
       const rawElapsedTime = now - _package.date
       const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
 
@@ -186,7 +195,6 @@ const CourierHome = ({token, updateNotification}) => {
       }
       return newPackage
     })
-    return extractedData
   }
 
   useEffect(() => {
@@ -216,7 +224,7 @@ const CourierHome = ({token, updateNotification}) => {
             placeholder="Enter a tracking number"
             inputProps={{ 'aria-label': 'Enter a tracking number' }}
             value={trackingNumber}
-            onChange={handleChange}
+            onChange={handleTrackingChange}
           />
           <IconButton 
             className={classes.iconButton} 

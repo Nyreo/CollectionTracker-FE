@@ -69,9 +69,6 @@ const PackageDetailsForm = ({_package, setPackage}) => {
             onChange={handleChange}
             endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
             aria-describedby="weight-manual-input-box"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
             labelWidth={0}
             inputProps = {
               {className: classes.input}
