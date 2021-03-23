@@ -153,6 +153,7 @@ const CourierHome = ({token, updateNotification, history}) => {
     }
 
     if(!checkExistingPackages()) {
+      // package does not already exist
       const response = await patchPackageRequest(trackingNumber, "in-transit", token.authHeader)
 
       if(response.err) updateError(response.err)
@@ -169,6 +170,7 @@ const CourierHome = ({token, updateNotification, history}) => {
         fetchPackages(token, setPackages, setLoading)
       }
     } else {
+      // package already exists
       console.log("package already exists... loading delivery")
       history.push('/delivery')
     }
@@ -181,7 +183,7 @@ const CourierHome = ({token, updateNotification, history}) => {
     // recpName, destPostcode, weight, elapsedTime
     const now = (new Date()).getTime()
 
-    return packages.map(_package => {
+    const extractedPackages = packages.map(_package => {
       const rawElapsedTime = now - _package.date
       const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
 
@@ -195,6 +197,15 @@ const CourierHome = ({token, updateNotification, history}) => {
       }
       return newPackage
     })
+
+    // sort packages
+    extractedPackages.sort((el1, el2) => {
+      if(el1['Elapsed Time'] < el2['Elapsed Time']) return -1
+      else if(el1['Elapsed Time'] >= el2['Elapsed Time']) return 1
+      return 0
+    })
+
+    return extractedPackages
   }
 
   useEffect(() => {
