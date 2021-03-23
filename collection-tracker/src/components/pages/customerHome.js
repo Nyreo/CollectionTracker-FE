@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequest } from '../../modules/apiManager'
+import { getPackageRequestByUser } from '../../modules/apiManager'
 
 // component imports
 import PackageList from '../packageList'
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const fetchPackages = async (token, setPackages, setLoading) => {
-  const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader)
+  const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader)
   
   if(error) console.log(error)
   else setPackages(data.data)

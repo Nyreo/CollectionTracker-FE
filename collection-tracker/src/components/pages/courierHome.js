@@ -13,7 +13,7 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequest, patchPackageRequest } from '../../modules/apiManager'
+import { getPackageRequestByUser, patchPackageRequest } from '../../modules/apiManager'
 
 // component imports
 import PackageList from '../packageList'
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const fetchPackages = async (token, setPackages, setLoading) => {
-  const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader, true)
+  const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader, true)
   
   if(error) console.log(error)
   else setPackages(data.data)
