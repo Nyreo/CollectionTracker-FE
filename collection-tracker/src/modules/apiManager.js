@@ -90,8 +90,19 @@ export async function postPackageRequest(_package, auth) {
   }
 }
 
-export async function patchPackageRequest(trackingnumber, status, auth) {
+export async function patchPackagePickup(trackingnumber, status, auth) {
   return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status},
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  .then(response => response.data)
+  .catch(error => error.response.data)
+}
+
+export async function patchPackageDeliver(trackingnumber, status, auth, deliveryDetails) {
+  return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status, deliveryDetails},
   {
     headers: {
       'Authorization': auth

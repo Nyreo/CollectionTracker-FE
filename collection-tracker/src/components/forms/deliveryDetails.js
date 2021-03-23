@@ -9,6 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import colourTheme from '../../styles/theme';
 
+import { patchPackageDeliver } from '../../modules/apiManager'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: '10px',
@@ -26,14 +28,22 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     }
   },
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   uploadButton: {
-    color:'white',
-    backgroundColor: colourTheme.primary.main,
+    backgroundColor: colourTheme.button.main,
     '&:hover': {
-      backgroundColor: colourTheme.primary.hover
+      backgroundColor: colourTheme.button.hover,
+      color : colourTheme.button.textHover
     }
   },
+  upload: {
+    flex: '1 0 45%',
+  },
   filePreview: {
+    position : 'relative',
     minHeight: '150px',
     height: '150px',
     maxHeight: '150px',
@@ -48,15 +58,34 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     objectFit: 'fill',
     borderRadius: '10px',
+  },
+  noFileText: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: 'lightgray',
+  },
+  submitButton: {
+    flex: '1 0 45%',
+    marginLeft: theme.spacing(2),
+    color:'white',
+    backgroundColor: colourTheme.primary.main,
+    '&:hover': {
+      backgroundColor: colourTheme.primary.hover
+    }
   }
 }));
 
 
-const DeliveryDetails = () => {
+const DeliveryDetails = ({token, trackingnumber, handleClose, updateError, updateNotification, removePackageCallback}) => {
   
   const classes = useStyles()
 
-  const [signature, setSignature] = useState("#")
+  const [signature, setSignature] = useState(null)
+  const [lat, setLat] = useState(0)
+  const [lng, setLng] = useState(0)
+  const [handedTo, setHandedTo] = useState('')
 
   const sigRef = useRef(null)
 
@@ -72,11 +101,57 @@ const DeliveryDetails = () => {
     };
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // get delivery details
+    const time = (new Date()).getTime() // time of delivery
+    
+    const deliveryDetails = {
+      time,
+      lat,
+      lng,
+      handedTo
+    }
+
+    const response = await patchPackageDeliver(trackingnumber, 'delivered', token.authHeader, deliveryDetails)
+
+    if(response.err) updateError(response.err)
+    else {
+      console.log(response)
+
+      // close window
+      handleClose()
+
+      // remove package from list locally
+      removePackageCallback(trackingnumber);
+
+      // set notiifcation
+      const notification = {message:'Package has been delivered', type:'success'}
+      updateNotification(notification)
+    }
+  }
+
+  const locationSuccess = pos => {
+    console.log(pos)
+
+    setLat(pos.coords.latitude)
+    setLng(pos.coords.longitude)
+  }
+
+  const locationFailure = err => {
+    console.log(err);
+  }
+
+  useEffect(() => {
+    // get location
+    navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, { maximumAge: 0, timeout: 5000});
+  }, [])
+
+  
+
   return (
     <>
-      <Typography className={classes.title} variant="h6">
-        Package Details
-      </Typography>
       <Grid className={classes.root} container spacing={3}>
         <Grid item xs={12}>
           <TextField
@@ -84,16 +159,18 @@ const DeliveryDetails = () => {
             variant="outlined"
             required
             fullWidth
-            id="address"
-            name='address'
-            label="Name of Delivery Recipient"
+            id="drecpname"
+            name='drecpname'
+            label="Delivery recipient"
+            value={handedTo}
+            onChange={val => setHandedTo(val.target.value)}
             inputProps = {
               {className: classes.multiInput}
             }
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography id="package-slider-text" gutterBottom style={{textAlign: 'left', paddingTop: '10px'}}>
+          <Typography id="upload-directive" >
             Please upload the delivery recipient's signature.
           </Typography>
           <div className={classes.filePreview} style={{background: signature}}>
@@ -107,20 +184,21 @@ const DeliveryDetails = () => {
               )
               :
               (
-                <Typography id="package-slider-text" gutterBottom style={{color: 'lightgray'}}>
+                <Typography id="package-slider-text" className={classes.noFileText}>
                 File preview (requires upload)
                 </Typography>
               )  
             }
           </div>
-          <Input 
+          <Grid className={classes.buttonGroup} item xs={12}>
+            <Input 
             style={{display: 'none'}} 
             accept="image/*" 
             id="signature-upload"
             type="file" 
             onChange={handleCapture}
-          />
-          <label htmlFor="signature-upload">
+            />
+            <label className={classes.upload} htmlFor="signature-upload">
             <Button 
               fullWidth 
               variant="contained" 
@@ -128,7 +206,19 @@ const DeliveryDetails = () => {
               component="span">
               Upload Signature
             </Button>
-          </label>
+            </label>
+            { signature && (
+              <Button 
+              fullWidth 
+              variant="contained" 
+              className={classes.submitButton} 
+              component="span"
+              onClick={handleSubmit}
+              >
+              Deliver Package
+              </Button>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </>

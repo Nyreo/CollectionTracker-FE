@@ -50,16 +50,16 @@ const PackageDetailsForm = ({_package, setPackage}) => {
         <Grid item xs={12} md={9}>
           <Typography id="package-slider-text" gutterBottom style={{textAlign: 'left', paddingTop: '10px'}}>
           Package Weight (kg)
-        </Typography>
-        <Slider
-          className={classes.inputbox}
-          aria-labelledby="package-slider"
-          max={maxWeight}
-          value={_package.weight}
-          onChange={handleChange}
-          marks
-          valueLabelDisplay="auto"
-        />
+          </Typography>
+          <Slider
+            className={classes.inputbox}
+            aria-labelledby="package-slider"
+            max={maxWeight}
+            value={_package.weight}
+            onChange={handleChange}
+            marks
+            valueLabelDisplay="auto"
+          />
         </Grid>
         <Grid item xs={12} sm={3}>
           <OutlinedInput

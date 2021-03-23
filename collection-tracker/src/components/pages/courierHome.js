@@ -13,10 +13,11 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequestByUser, patchPackageRequest } from '../../modules/apiManager'
+import { getPackageRequestByUser, patchPackagePickup } from '../../modules/apiManager'
 
 // component imports
 import PackageList from '../packageList'
+import DeliveryDialog from '../popups/delivery'
 
 // styles
 import colourTheme from '../../styles/theme'
@@ -119,6 +120,7 @@ const CourierHome = ({token, updateNotification, history}) => {
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
   const [trackingNumber, setTrackingNumber] = useState('')
+  const [openDelivery, setOpenDelivery] = useState(false)
 
   const updateError = val => {
     const notification = { message : val, type: 'error'}
@@ -143,6 +145,15 @@ const CourierHome = ({token, updateNotification, history}) => {
     return false
   }
 
+  const removeExistingPackage = id => {
+    for(let i = 0; i < packages.length; i++) {
+      if(packages[i]._id === id) {
+        packages.splice(i, 1);
+        break;
+      } 
+    }
+  }
+
   const handleTrackingSubmit = async () => {
     // validate
     try {
@@ -154,7 +165,7 @@ const CourierHome = ({token, updateNotification, history}) => {
 
     if(!checkExistingPackages()) {
       // package does not already exist
-      const response = await patchPackageRequest(trackingNumber, "in-transit", token.authHeader)
+      const response = await patchPackagePickup(trackingNumber, "in-transit", token.authHeader)
 
       if(response.err) updateError(response.err)
       else {
@@ -172,7 +183,7 @@ const CourierHome = ({token, updateNotification, history}) => {
     } else {
       // package already exists
       console.log("package already exists... loading delivery")
-      history.push('/delivery')
+      setOpenDelivery(true);
     }
 
     
@@ -217,6 +228,7 @@ const CourierHome = ({token, updateNotification, history}) => {
   }, [token])
   
   return (
+    <>
     <Grid className={classes.root} >
       <Grid className={classes.intro} item xs={12}>
         <h1 className={classes.title}>Courier Homepage</h1>
@@ -253,6 +265,16 @@ const CourierHome = ({token, updateNotification, history}) => {
       <PackageList packages={packages ? extractPackageData() : null} displayIcon={false}/>
       </Grid>
     </Grid>
+    <DeliveryDialog 
+      open={openDelivery} 
+      setOpen={val => setOpenDelivery(val)}
+      token={token}
+      trackingnumber={trackingNumber}
+      updateNotification={updateNotification}
+      updateError={updateError}
+      removePackageCallback={removeExistingPackage}
+    />
+    </>
   )
 }
 

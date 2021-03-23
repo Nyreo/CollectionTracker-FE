@@ -9,7 +9,6 @@ import Home from './pages/home';
 import Login from './pages/login';
 import Register from './pages/register';
 import SendPackage from "./pages/sendPackage";
-import Delivery from './pages/delivery';
 
 
 const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
@@ -23,15 +22,6 @@ const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
       />
       {/* routes */}
       <Switch>
-        {/* delivery */}
-        <Route render={
-          (props) => token ? 
-          <Delivery {...props} token={token} />
-          :
-          <Redirect to='/' />
-        } 
-        path="/delivery" 
-        />
         {/* send package */}
         <Route render={
           (props) => token ? 
