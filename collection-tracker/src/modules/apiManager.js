@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseuri = "http://localhost:8080/v1"
+const baseuri = "http://localhost:8080/v2"
 
 const generateToken = (userDetails) => {
   return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;
@@ -90,7 +90,7 @@ export async function postPackageRequest(_package, auth) {
   }
 }
 
-export async function patchPackageRequest(trackingnumber, status, auth) {
+export async function patchPackagePickup(trackingnumber, status, auth) {
   return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status},
   {
     headers: {
@@ -99,4 +99,29 @@ export async function patchPackageRequest(trackingnumber, status, auth) {
   })
   .then(response => response.data)
   .catch(error => error.response.data)
+}
+
+export async function patchPackageDeliver(trackingnumber, status, auth, deliveryDetails, signature64) {
+  return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status, deliveryDetails},
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  .then(() => postPackageSignature(trackingnumber, signature64, auth))
+  .then(response => response)
+  .catch(error => error.response.data)
+}
+
+async function postPackageSignature(trackingNumber, signature64, auth) {
+  return axios.post(`${baseuri}/packages/signatures`,
+  {
+    trackingNumber,
+    signature64
+  },
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
 }

@@ -115,7 +115,6 @@ const AddressForm = ({_package, setPackage}) => {
             label="Recipient's Address"
             multiline
             rows={3}
-            variant="outlined"
             inputProps = {
               {className: classes.multiInput}
             }

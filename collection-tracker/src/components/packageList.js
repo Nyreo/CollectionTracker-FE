@@ -27,7 +27,7 @@ export default function PackageList({packages, displayIcon}) {
     if(!packages.length) {
       return (
         <Typography>
-          You have not added any packages :(
+          There are no packages to display.
         </Typography>
       )
     }
