@@ -114,7 +114,7 @@ const DeliveryDetails = ({token, trackingnumber, handleClose, updateError, updat
       handedTo
     }
 
-    const response = await patchPackageDeliver(trackingnumber, 'delivered', token.authHeader, deliveryDetails)
+    const response = await patchPackageDeliver(trackingnumber, 'delivered', token.authHeader, deliveryDetails, signature)
 
     if(response.err) updateError(response.err)
     else {

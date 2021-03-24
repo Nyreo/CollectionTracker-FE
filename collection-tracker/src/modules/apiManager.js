@@ -101,13 +101,27 @@ export async function patchPackagePickup(trackingnumber, status, auth) {
   .catch(error => error.response.data)
 }
 
-export async function patchPackageDeliver(trackingnumber, status, auth, deliveryDetails) {
+export async function patchPackageDeliver(trackingnumber, status, auth, deliveryDetails, signature64) {
   return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status, deliveryDetails},
   {
     headers: {
       'Authorization': auth
     }
   })
-  .then(response => response.data)
+  .then(() => postPackageSignature(trackingnumber, signature64, auth))
+  .then(response => response)
   .catch(error => error.response.data)
+}
+
+async function postPackageSignature(trackingNumber, signature64, auth) {
+  return axios.post(`${baseuri}/packages/signatures`,
+  {
+    trackingNumber,
+    signature64
+  },
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
 }
