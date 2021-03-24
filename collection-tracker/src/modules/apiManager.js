@@ -39,7 +39,7 @@ export async function registerRequest(credentials) {
 
 export async function getPackageRequestByUser(username, auth, courier="false") {
   try {
-    const response = await axios.get(`${baseuri}/packages/${username}?courier=${courier}`, 
+    const response = await axios.get(`${baseuri}/packages?username=${username}&courier=${courier}`, 
     {
       headers: {
         'Authorization': auth
@@ -57,7 +57,7 @@ export async function getPackageRequestByUser(username, auth, courier="false") {
 
 export async function getSpecificPackage(auth, trackingnumber) {
   try {
-    const response = await axios.get(`${baseuri}/packages?trackingnumber=${trackingnumber}`, 
+    const response = await axios.get(`${baseuri}/packages/${trackingnumber}`, 
     {
       headers: {
         'Authorization': auth
@@ -91,7 +91,7 @@ export async function postPackageRequest(_package, auth) {
 }
 
 export async function patchPackagePickup(trackingnumber, status, auth) {
-  return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status},
+  return axios.patch(`${baseuri}/packages/${trackingnumber}`, {status},
   {
     headers: {
       'Authorization': auth
@@ -102,7 +102,7 @@ export async function patchPackagePickup(trackingnumber, status, auth) {
 }
 
 export async function patchPackageDeliver(trackingnumber, status, auth, deliveryDetails, signature64) {
-  return axios.patch(`${baseuri}/packages/?trackingnumber=${trackingnumber}`, {status, deliveryDetails},
+  return axios.patch(`${baseuri}/packages/${trackingnumber}`, {status, deliveryDetails},
   {
     headers: {
       'Authorization': auth

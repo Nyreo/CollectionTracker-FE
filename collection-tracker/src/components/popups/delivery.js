@@ -37,7 +37,7 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
 
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
