@@ -219,6 +219,21 @@ export default function NavBar({token, clearToken, history}) {
             </Button>
           </>
         )
+      case 'manager': 
+        return (
+          <>
+            <Typography className={classes.welcomeMessage}>Manager View</Typography>
+            <Link to='/send' className={classes.link}>
+            </Link>
+            <Button 
+              color="inherit" 
+              className={classes.menuButton}
+              onClick={clearToken}  
+            ><MeetingRoomIcon className={classes.menuIcon}/>
+              Logout
+            </Button>
+          </>
+        )
       default:
         return (
           <>

@@ -92,9 +92,6 @@ export default function Register({saveToken, history, updateNotification}) {
     userType: 'customer'
   })
 
-  const [error, setError] = useState(null)
- 
-
   const handleCredentialUpdate = (e) => {
     
     setCredentials({...credentials, [e.target.name]: e.target.value})
@@ -143,10 +140,6 @@ export default function Register({saveToken, history, updateNotification}) {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        {/* error message */}
-        {
-          error ? (<span className={classes.error}>{error}</span>) : (null)
-        }
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"
