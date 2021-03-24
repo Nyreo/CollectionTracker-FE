@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequest } from '../../modules/apiManager'
+import { getPackageRequestByUser } from '../../modules/apiManager'
 
 // component imports
 import PackageList from '../packageList'
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const fetchPackages = async (token, setPackages, setLoading) => {
-  const { data, error } = await getPackageRequest(token.userDetails.username, token.authHeader)
+  const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader)
   
   if(error) console.log(error)
   else setPackages(data.data)
@@ -91,7 +91,7 @@ const CustomerHome = ({token}) => {
   const extractPackageData = () => {
     // recpName, destPostcode, dateTime
 
-    const extractedData = packages.map(_package => {
+    const extractedPackages = packages.map(_package => {
       const dateTime = new Date(_package.date).toLocaleString()
 
       const newPackage = {
@@ -103,7 +103,19 @@ const CustomerHome = ({token}) => {
       }
       return newPackage
     })
-    return extractedData
+
+    // sort packages
+    extractedPackages.sort((el1, el2) => {
+
+      const date1 = (new Date(el1['Added']))
+      const date2 = (new Date(el2['Added']))
+
+      if(date1 > date2) return -1
+      else if(date1 <= date2) return 1
+      return 0
+    })
+
+    return extractedPackages
   }
 
   useEffect(() => {

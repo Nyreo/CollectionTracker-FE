@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseuri = "http://localhost:8080"
+const baseuri = "http://localhost:8080/v2"
 
 const generateToken = (userDetails) => {
   return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;
@@ -37,9 +37,27 @@ export async function registerRequest(credentials) {
   }
 }
 
-export async function getPackageRequest(username, auth, courier="false") {
+export async function getPackageRequestByUser(username, auth, courier="false") {
   try {
-    const response = await axios.get(`${baseuri}/packages/${username}?courier=${courier}`, 
+    const response = await axios.get(`${baseuri}/packages?username=${username}&courier=${courier}`, 
+    {
+      headers: {
+        'Authorization': auth
+      }
+    })
+
+    console.log(response)
+    return response
+  }
+  catch (error) {
+    console.log(error)
+    return {error}
+  }
+}
+
+export async function getSpecificPackage(auth, trackingnumber) {
+  try {
+    const response = await axios.get(`${baseuri}/packages/${trackingnumber}`, 
     {
       headers: {
         'Authorization': auth
@@ -72,8 +90,8 @@ export async function postPackageRequest(_package, auth) {
   }
 }
 
-export async function patchPackageRequest(trackingNumber, status, auth) {
-  return axios.patch(`${baseuri}/packages/tracking/${trackingNumber}`, {status},
+export async function patchPackagePickup(trackingnumber, status, auth) {
+  return axios.patch(`${baseuri}/packages/${trackingnumber}`, {status},
   {
     headers: {
       'Authorization': auth
@@ -81,4 +99,29 @@ export async function patchPackageRequest(trackingNumber, status, auth) {
   })
   .then(response => response.data)
   .catch(error => error.response.data)
+}
+
+export async function patchPackageDeliver(trackingnumber, status, auth, deliveryDetails, signature64) {
+  return axios.patch(`${baseuri}/packages/${trackingnumber}`, {status, deliveryDetails},
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  .then(() => postPackageSignature(trackingnumber, signature64, auth))
+  .then(response => response)
+  .catch(error => error.response.data)
+}
+
+async function postPackageSignature(trackingNumber, signature64, auth) {
+  return axios.post(`${baseuri}/packages/signatures`,
+  {
+    trackingNumber,
+    signature64
+  },
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
 }
