@@ -23,20 +23,23 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     [theme.breakpoints.down('sm')]: {
-      height: 7,
-      fontSize: '14px',
+      fontSize: '12px',
       width: '100%',
+      marginTop: 0
     }
   },
   buttonGroup: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   uploadButton: {
     backgroundColor: colourTheme.button.main,
     '&:hover': {
       backgroundColor: colourTheme.button.hover,
       color : colourTheme.button.textHover
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12,
     }
   },
   upload: {
@@ -51,7 +54,11 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid lightgray",
     borderRadius: '10px',
     marginBottom: theme.spacing(2),
-    padding: '10px'
+    padding: '10px',
+    [theme.breakpoints.down('sm')]: {
+      height: '100px',
+      minHeight: '100px',
+    }
   },
   sigImage: {
     width: '100%',
@@ -65,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     color: 'lightgray',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12,
+      textAlign: 'center'
+    }
   },
   submitButton: {
     flex: '1 0 45%',
@@ -73,6 +84,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: colourTheme.primary.main,
     '&:hover': {
       backgroundColor: colourTheme.primary.hover
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12,
+    }
+  },
+  subText: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12,
     }
   }
 }));
@@ -167,12 +186,12 @@ const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClos
             value={handedTo}
             onChange={val => setHandedTo(val.target.value)}
             inputProps = {
-              {className: classes.multiInput}
+              {className: classes.input}
             }
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography id="upload-directive" >
+          <Typography className={classes.subText} id="upload-directive" >
             Please upload the delivery recipient's signature.
           </Typography>
           <div className={classes.filePreview} style={{background: signature}}>

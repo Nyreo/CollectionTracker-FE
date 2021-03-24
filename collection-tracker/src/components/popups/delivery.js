@@ -11,6 +11,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import DeliveryDetails from '../forms/deliveryDetails';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    position: 'relative'
+  },
   close: {
     position: 'absolute',
     top: theme.spacing(1),
@@ -21,7 +24,11 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   loading: {
-    marginLeft: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      position: 'absolute',
+      left: '42.5%',
+      top: '42.5%',
+    }
   }
 }));
 
@@ -30,7 +37,7 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
 
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
@@ -44,7 +51,7 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
         <CloseIcon className={classes.close} onClick={handleClose}/>
         <DialogTitle id="delivery-dialog-title">Making a delivery.</DialogTitle>
         <DialogContent>
-          Delivery recipient details for parcel - {trackingnumber}
+          Delivery details for: {trackingnumber}
         </DialogContent>
         { loading && (
           <DialogContent style={{textAlign: 'center'}}>
