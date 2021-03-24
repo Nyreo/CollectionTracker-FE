@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const DeliveryDetails = ({token, trackingnumber, handleClose, updateError, updateNotification, removePackageCallback}) => {
+const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClose, updateError, updateNotification, removePackageCallback}) => {
   
   const classes = useStyles()
 
@@ -104,6 +104,8 @@ const DeliveryDetails = ({token, trackingnumber, handleClose, updateError, updat
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    handleLoadingUpdate(true)
+
     // get delivery details
     const time = (new Date()).getTime() // time of delivery
     
@@ -115,6 +117,8 @@ const DeliveryDetails = ({token, trackingnumber, handleClose, updateError, updat
     }
 
     const response = await patchPackageDeliver(trackingnumber, 'delivered', token.authHeader, deliveryDetails, signature)
+
+    handleLoadingUpdate(false)
 
     if(response.err) updateError(response.err)
     else {
@@ -147,8 +151,6 @@ const DeliveryDetails = ({token, trackingnumber, handleClose, updateError, updat
     // get location
     navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, { maximumAge: 0, timeout: 5000});
   }, [])
-
-  
 
   return (
     <>

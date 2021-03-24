@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import CloseIcon from '@material-ui/icons/Close';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       cursor: 'pointer'
     }
+  },
+  loading: {
+    marginLeft: 'auto',
   }
 }));
 
@@ -26,9 +30,13 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
 
   const classes = useStyles()
 
+  const [loading, setLoading] = useState(false);
+
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleLoadingUpdate = val => setLoading(val)
 
   return (
     <div>
@@ -38,6 +46,11 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
         <DialogContent>
           Delivery recipient details for parcel - {trackingnumber}
         </DialogContent>
+        { loading && (
+          <DialogContent style={{textAlign: 'center'}}>
+            <CircularProgress className={classes.loading}/>
+          </DialogContent>
+        )}
         <DialogContent style={{overflowY: 'hidden', marginBottom: '2em'}}>
           <DeliveryDetails 
             token={token} 
@@ -46,6 +59,7 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
             updateError={updateError}
             updateNotification={updateNotification}
             removePackageCallback={removePackageCallback}
+            handleLoadingUpdate={handleLoadingUpdate}
           />
         </DialogContent>
       </Dialog>
