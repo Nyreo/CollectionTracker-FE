@@ -9,6 +9,7 @@ import colourTheme from '../../styles/theme'
 import AnonHome from './anonHome'
 import CustomerHome from './customerHome'
 import CourierHome from './courierHome'
+import ManagerHome from './managerHome'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,7 +78,7 @@ const renderUserpage = (_props, classes, ) => {
     case 'courier':
       return <CourierHome {..._props}/>
     case 'manager':
-      break;
+      return <ManagerHome {..._props}/>
     default:
       return <AnonHome classes={classes} />
   }

@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register({saveToken, history}) {
+export default function Register({saveToken, history, updateNotification}) {
   const classes = useStyles();
 
   const [credentials, setCredentials] = useState({
@@ -103,10 +103,8 @@ export default function Register({saveToken, history}) {
   }
 
   const updateError = (err) => {
-    setError(err)
-    setTimeout(() => {
-      setError(null)
-    }, 5000)
+    const notification = { message : err, type: 'error'}
+    updateNotification(notification)
   }
 
   const handleFormSubmit = async (e) => {
@@ -224,6 +222,7 @@ export default function Register({saveToken, history}) {
           >
             <MenuItem value={"customer"}>Customer</MenuItem>
             <MenuItem value={"courier"}>Courier</MenuItem>
+            <MenuItem value={"manager"}>Manager</MenuItem>
           </Select>
           <FormHelperText>Which type of user are you?</FormHelperText>
           <Button
