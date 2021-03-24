@@ -198,12 +198,16 @@ const CourierHome = ({token, updateNotification, history}) => {
       const rawElapsedTime = now - _package.date
       const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
 
+      const datePosted = (new Date(_package.date)).toLocaleString();
+
       const newPackage = {
         trackingNumber: _package._id,
         status: _package.status,
         "Recipient Name" : _package.recpName,
         "Destination Postcode": _package.destPostcode,
+        "Address" : _package.address,
         "Package Weight" : `${_package.weight}kg`,
+        "Date Posted": datePosted,
         "Elapsed Time" : elapsedTime,
       }
       return newPackage
