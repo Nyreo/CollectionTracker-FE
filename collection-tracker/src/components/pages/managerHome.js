@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { getCourierPackages } from '../../modules/apiManager';
+
 import Paper from '@material-ui/core/Paper'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
@@ -93,30 +95,80 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const displays = [
-  <CourierTable />,
-  <IdlePackageTable />,
-  <DeliveredPackagesTable />
-]
 
+const renderDisplay = (currentTab) => {
+
+  // console.log("RENDERING");
+  // console.log(courierInfo);
+
+  switch(currentTab) {
+    case 0:
+      return <CourierTable />
+    case 1:
+      return <IdlePackageTable />
+    case 2:
+      return <DeliveredPackagesTable />
+    default:
+      return null
+  }
+}
+
+const fetchCourierData = async (setLoading, token) => {
+  setLoading(true);
+  
+  const {data, error} = await getCourierPackages(token.authHeader)
+
+  if(error) console.log(error)
+  else {
+    console.log("RECEIVED DATA")
+
+    const values = await Promise.all(Object.values(data));
+    
+    // get details
+    const info = {}
+
+    info['undelivered'] = courierStats(values);
+
+    console.log(info);
+  }
+  setLoading(false)
+}
+
+const courierStats = courierInfo => {
+
+  const cstats = []
+  for(const info of courierInfo) {
+    cstats.push({
+      courier: info.courier,
+      undelivered: info.data.filter(p => p.status === 'in-transit')
+    })
+  }
+  return cstats
+}
 
 export default function ManagerHome({token}) {
 
   const classes = useStyles();
   const [currentTab, setCurrentTab] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
+  const [courierInfo, setCourierInfo] = React.useState(null);
 
   const handleChange = (event, newValue) => {
-    console.log(newValue)
     setCurrentTab(newValue);
   };
 
-  const renderDisplay = () => displays[currentTab];
+  React.useEffect(() => {
+    fetchCourierData(setLoading, token)
+  }, [token])
 
   return (
     <>
     <div className={classes.intro}>
       <h1 className={classes.title}>Manager Homepage</h1>
     </div>
+    { loading && (
+      <p>Loading courier information...</p>
+    )}
     <Paper>
       <Grid>
         <Grid item xs={12}>
@@ -142,7 +194,7 @@ export default function ManagerHome({token}) {
         </Grid>
         <Grid item xs={12}>
           <Container>
-            {renderDisplay()}
+            {renderDisplay(currentTab)}
           </Container>
         </Grid>
       </Grid>

@@ -25,20 +25,25 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: '2020-01-05', customerId: '11091700', amount: 3 },
-      { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-    ],
-  };
-}
+const useTableStyles = makeStyles({
+  tableContainer: {
+    maxHeight: 440,
+    margin: "20px 0"
+  }
+})
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: colourTheme.primary.main,
+    color: theme.palette.common.white,
+    fontWeight: 700,
+    flex: 1,
+  },
+  body: {
+    fontSize: 14,
+    fontWeight: 700,
+  },
+}))(TableCell);
 
 function Row(props) {
   const { row } = props;
@@ -59,7 +64,7 @@ function Row(props) {
         <TableCell>{row.calories}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
@@ -97,31 +102,16 @@ function Row(props) {
   );
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159),
-  createData('Ice cream sandwich', 237),
-  createData('Eclair', 262),
-  createData('Cupcake', 305),
-  createData('Gingerbread', 356),
-];
+export default function CourierTable({data}) {
 
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: colourTheme.primary.main,
-    color: theme.palette.common.white,
-    fontWeight: 700,
-    flex: 1,
-  },
-  body: {
-    fontSize: 14,
-    fontWeight: 700,
-  },
-}))(TableCell);
+  // console.log("COURIER_TABLE");
+  // console.log(data);
 
-export default function CourierTable() {
+  const classes = useTableStyles()
+
   return (
-    <TableContainer>
-      <Table aria-label="collapsible table" size='small'>
+    <TableContainer className={classes.tableContainer}>
+      <Table stickyHeader aria-label="collapsible table" size='small'>
         <TableHead>
           <TableRow style={{backgroundColor: colourTheme.primary.main}}>
             <StyledTableCell />
@@ -130,9 +120,6 @@ export default function CourierTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
         </TableBody>
       </Table>
     </TableContainer>

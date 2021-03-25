@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseuri = "http://localhost:8080/v2"
+const baseuri = "http://localhost:8080/v3"
 
 const generateToken = (userDetails) => {
   return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;
@@ -53,6 +53,51 @@ export async function getPackageRequestByUser(username, auth, courier="false") {
     console.log(error)
     return {error}
   }
+}
+
+// accounts.get, packages.get?username=username&courier=true
+export async function getCourierPackages(auth) {
+  // get all users who are couriers
+  return axios.get(`${baseuri}/accounts/couriers`, 
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  // returns user details
+  .then(response => response.data.data.couriers)
+  .then(couriers => {
+    const courierData = {}
+
+    couriers.forEach(courier => {
+      const cPackages = axios.get(`${baseuri}/packages?username=${courier}&courier=true&status=any`, {
+        headers: {
+          'Authorization': auth
+        }
+      }).then(response => {
+        return { courier, data: response.data.data}
+      })
+
+      courierData[courier] = cPackages
+    })
+    
+    return {data: courierData}
+  })
+  .catch(error => console.log(error))
+
+  // get all packages for each courier
+    // those that are not yet delivered
+      // return { 'courier' : packages }
+}
+
+// packages.get
+export async function getIdlePackages(auth) {
+  // get all packages who's status $eq : not-dispatched
+}
+
+export async function getDeliveredPackages(auth) {
+  // get all packages who's status $eq : delivered
+  // sort by delivery time
 }
 
 export async function getSpecificPackage(auth, trackingnumber) {

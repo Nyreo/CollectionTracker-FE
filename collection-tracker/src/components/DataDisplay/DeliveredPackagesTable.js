@@ -35,7 +35,6 @@ function createData(name, calories, fat, carbs, protein, price) {
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
   return (
@@ -59,6 +58,16 @@ const rows = [
   createData('Eclair', 262),
   createData('Cupcake', 305),
   createData('Gingerbread', 356),
+  createData('Frozen yoghurt', 159),
+  createData('asdfasdfadsfadsf', 237),
+  createData('adsfadsfadfadfa', 262),
+  createData('Cupadsfadsfacake', 305),
+  createData('Ginadsfadfgerbread', 356),
+  createData('Frasdfasdfozen yoghurt', 159),
+  createData('Icasdfadfe cream sandwich', 237),
+  createData('asdfadfa', 262),
+  createData('Cuasdfadfpcake', 305),
+  createData('Gingasdfadferbread', 356),
 ];
 
 const StyledTableCell = withStyles((theme) => ({
@@ -77,7 +86,7 @@ const StyledTableCell = withStyles((theme) => ({
 export default function DeliveredPackagesTable() {
   return (
     <TableContainer>
-      <Table aria-label="collapsible table" size='small'>
+      <Table stickyHeader aria-label="collapsible table" size='small'>
         <TableHead>
           <TableRow style={{backgroundColor: colourTheme.primary.main}}>
             <StyledTableCell>Tracking No.</StyledTableCell>
