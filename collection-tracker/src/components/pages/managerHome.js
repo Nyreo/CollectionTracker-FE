@@ -15,7 +15,8 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import colourTheme from '../../styles/theme';
 
 import CourierTable from '../DataDisplay/courierTable';
-
+import IdlePackageTable from '../DataDisplay/IdlePackageTable';
+import DeliveredPackagesTable from '../DataDisplay/DeliveredPackagesTable';
 
 const StyledTabs = withStyles({
   indicator: {
@@ -92,15 +93,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const displays = [
+  <CourierTable />,
+  <IdlePackageTable />,
+  <DeliveredPackagesTable />
+]
+
 
 export default function ManagerHome({token}) {
 
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [currentTab, setCurrentTab] = React.useState(0);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    console.log(newValue)
+    setCurrentTab(newValue);
   };
+
+  const renderDisplay = () => displays[currentTab];
 
   return (
     <>
@@ -112,7 +122,7 @@ export default function ManagerHome({token}) {
         <Grid item xs={12}>
           <div className={`${classes.tabHeader} ${classes.sectionDesktop}`}>
             <StyledTabs 
-              value={value} 
+              value={currentTab} 
               onChange={handleChange} 
               aria-label="styled tabs example">
               <StyledTab icon={<LocalShippingIcon />} className={classes.tabText} label="Couriers" />
@@ -122,7 +132,7 @@ export default function ManagerHome({token}) {
             <Typography className={classes.padding} />
           </div>
           <div className={`${classes.tabHeader} ${classes.sectionMobile}`}>
-            <StyledTabs fullWidth variant="fullWidth" value={value} onChange={handleChange} aria-label="styled tabs example">
+            <StyledTabs fullWidth variant="fullWidth" value={currentTab} onChange={handleChange} aria-label="styled tabs example">
               <StyledTab icon={<LocalShippingIcon />} className={classes.tabText}/>
               <StyledTab icon={<QueryBuilderIcon />} className={classes.tabText}/>
               <StyledTab icon={<AssignmentTurnedInIcon />} className={classes.tabText}/>
@@ -132,7 +142,7 @@ export default function ManagerHome({token}) {
         </Grid>
         <Grid item xs={12}>
           <Container>
-            <CourierTable />
+            {renderDisplay()}
           </Container>
         </Grid>
       </Grid>
