@@ -11,11 +11,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 const useRowStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
   noMobile: {
     [theme.breakpoints.down('sm')]: {
       display: "none"

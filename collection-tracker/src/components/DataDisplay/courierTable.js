@@ -50,8 +50,8 @@ const useRowStyles = makeStyles((theme) => ({
 
 const useTableStyles = makeStyles((theme) => ({
   tableContainer: {
-    height: '60vh',
-    maxHeight: '60vh',
+    height: '65vh',
+    maxHeight: 'inherit',
   },
   noMobile: {
     [theme.breakpoints.down('sm')]: {

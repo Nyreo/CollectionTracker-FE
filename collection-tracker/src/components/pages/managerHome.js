@@ -9,7 +9,10 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
 
+// icons
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
@@ -49,6 +52,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: '65vh',
     minHeight: '65vh',
+  },
+  loading: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: "translate(-50%, -50%)",
   },
   padding: {
     padding: theme.spacing(3),
@@ -186,7 +195,10 @@ export default function ManagerHome({token}) {
     
     <Paper style={{position: 'relative'}}>
       { loading && (
-        <p style={{position: 'absolute', top: -10,}}>Loading courier information...</p>
+        <Box className={classes.loading}>
+          <CircularProgress/>
+          <Typography>Loading Data.</Typography>
+        </Box>
       )}
       <Grid className={classes.root}>
         <Grid item xs={12}>
@@ -210,7 +222,7 @@ export default function ManagerHome({token}) {
           </div>
         </Grid>
         <Grid item xs={12}>
-          <Container>
+          <Container style={{maxHeight: '50vh'}}>
             { courierInfo ? renderDisplay(currentTab, courierInfo) : null }
           </Container>
         </Grid>

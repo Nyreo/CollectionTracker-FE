@@ -14,17 +14,22 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import FlagIcon from '@material-ui/icons/Flag';
 
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
+const useRowStyles = makeStyles((theme) => ({
   flagged: {
     color: '#E94D4D',
     marginRight: 10,
-  }
-});
+  },
+  noMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: "none"
+    }
+  },
+  noDesktop: {
+    [theme.breakpoints.up('md')]: {
+      display: "none"
+    }
+  },
+}));
 
 function Row({data}) {
   const classes = useRowStyles();
@@ -48,8 +53,11 @@ function Row({data}) {
           )}
           {data._id}
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.noMobile}>
           {(new Date(data.date)).toLocaleString()}
+        </TableCell>
+        <TableCell className={classes.noDesktop}>
+          {(new Date(data.date)).toLocaleDateString()}
         </TableCell>
         <TableCell>
           {elapsedTime}
@@ -68,11 +76,7 @@ const StyledTableCell = withStyles((theme) => ({
       fontSize : 12,
       lineHeight: 1,
     }
-  },
-  body: {
-    fontSize: 14,
-    fontWeight: 700,
-  },
+  }
 }))(TableCell);
 
 const useTableStyles = makeStyles((theme) => ({
