@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3),
     },
     [theme.breakpoints.down('sm')]: {
-      maxHeight: '75vh'
+      maxHeight: '80vh'
     }
   },
   title : {

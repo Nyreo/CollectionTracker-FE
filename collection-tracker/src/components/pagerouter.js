@@ -45,7 +45,7 @@ const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
           (props) => token ? 
             <Redirect to='/' /> 
             : 
-            <Register {...props} saveToken={saveToken}/>
+            <Register {...props} saveToken={saveToken} updateNotification={updateNotification}/>
         } 
         path="/register" 
         />
