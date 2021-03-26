@@ -10,87 +10,64 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import Tooltip from '@material-ui/core/Tooltip';
+
+import FlagIcon from '@material-ui/icons/Flag';
+
 const useRowStyles = makeStyles({
   root: {
     '& > *': {
       borderBottom: 'unset',
     },
   },
+  flagged: {
+    color: '#E94D4D',
+    marginRight: 10,
+  }
 });
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: '2020-01-05', customerId: '11091700', amount: 3 },
-      { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-    ],
-  };
-}
-
-function Row(props) {
-  const { row } = props;
+function Row({data}) {
   const classes = useRowStyles();
+
+  const now = (new Date()).getTime()
+  const rawElapsedTime = now - data.date
+  const allowedTime = 48 * 60 * 60 * 1000
+
+  const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
+
+  const flagged = rawElapsedTime >= allowedTime
 
   return (
     <React.Fragment>
-      <TableRow className={classes.root}>
+      <TableRow className={`${classes.root}`}>
         <TableCell>
-          Tracking
+          { flagged && (
+            <Tooltip title="Waiting too long" aria-label="add">
+              <FlagIcon className={classes.flagged}/>
+          </Tooltip>
+          )}
+          {data._id}
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
+        <TableCell>
+          {(new Date(data.date)).toLocaleString()}
         </TableCell>
-        <TableCell>{row.calories}</TableCell>
+        <TableCell>
+          {elapsedTime}
+        </TableCell>
       </TableRow>
     </React.Fragment>
   );
 }
-
-const rows = [
-  createData('Frozen yoghurt', 159),
-  createData('Ice cream sandwich', 237),
-  createData('Eclair', 262),
-  createData('Cupcake', 305),
-  createData('Gingerbread', 356),
-  createData('Frozen yoghurt', 159),
-  createData('asdfasdfadsfadsf', 237),
-  createData('adsfadsfadfadfa', 262),
-  createData('Cupadsfadsfacake', 305),
-  createData('Ginadsfadfgerbread', 356),
-  createData('Frasdfasdfozen yoghurt', 159),
-  createData('Icasdfadfe cream sandwich', 237),
-  createData('asdfadfa', 262),
-  createData('Cuasdfadfpcake', 305),
-  createData('Gingasdfadferbread', 356),
-  createData('Frozen yoghurt', 159),
-  createData('Ice cream sandwich', 237),
-  createData('Eclair', 262),
-  createData('Cupcake', 305),
-  createData('Gingerbread', 356),
-  createData('Frozen yoghurt', 159),
-  createData('asdfasdfadsfadsf', 237),
-  createData('adsfadsfadfadfa', 262),
-  createData('Cupadsfadsfacake', 305),
-  createData('Ginadsfadfgerbread', 356),
-  createData('Frasdfasdfozen yoghurt', 159),
-  createData('Icasdfadfe cream sandwich', 237),
-  createData('asdfadfa', 262),
-  createData('Cuasdfadfpcake', 305),
-  createData('Gingasdfadferbread', 356),
-];
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: colourTheme.primary.main,
     color: theme.palette.common.white,
     fontWeight: 700,
-    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      fontSize : 12,
+      lineHeight: 1,
+    }
   },
   body: {
     fontSize: 14,
@@ -98,21 +75,43 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-export default function IdlePackageTable() {
+const useTableStyles = makeStyles((theme) => ({
+  tableContainer: {
+    height: '60vh',
+    maxHeight: '60vh',
+  },
+  noMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: "none"
+    }
+  },
+}));
+
+const generateRows = (idleData) => {
+  
+  return idleData.map(p => 
+    (
+      <Row key={`idlep.${p._id}`} data={p} />
+    )
+  )
+}
+
+export default function IdlePackageTable({data}) {
+
+  const classes = useTableStyles()
+
   return (
-    <TableContainer>
+    <TableContainer className={classes.tableContainer}>
       <Table stickyHeader aria-label="collapsible table" size='small'>
         <TableHead>
           <TableRow style={{backgroundColor: colourTheme.primary.main}}>
             <StyledTableCell>Tracking No.</StyledTableCell>
-            <StyledTableCell fullWidth>Date Posted</StyledTableCell>
-            <StyledTableCell fullWidth>Time Elapsed</StyledTableCell>
+            <StyledTableCell>Date Posted</StyledTableCell>
+            <StyledTableCell>Time Elapsed</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
+          {generateRows(data)}
         </TableBody>
       </Table>
     </TableContainer>

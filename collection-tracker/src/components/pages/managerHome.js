@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getCourierPackages } from '../../modules/apiManager';
+import { getGroupedPackages } from '../../modules/apiManager';
 
 import Paper from '@material-ui/core/Paper'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -47,7 +47,8 @@ const StyledTab = withStyles((theme) => ({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    height: '65vh',
+    minHeight: '65vh',
   },
   padding: {
     padding: theme.spacing(3),
@@ -57,6 +58,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     maxWidth: '100%',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.8em',
+      flex: "1 1 100%",
+    }
   },
   tabText: {
     color: '#292929',
@@ -87,7 +92,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sectionMobile: {
-    display: 'flex',
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
@@ -96,53 +100,66 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const renderDisplay = (currentTab) => {
-
-  // console.log("RENDERING");
-  // console.log(courierInfo);
+const renderDisplay = (currentTab, courierInfo) => {
 
   switch(currentTab) {
     case 0:
-      return <CourierTable />
+      return <CourierTable data={courierInfo.undelivered}/>
     case 1:
-      return <IdlePackageTable />
+      return <IdlePackageTable data={courierInfo.idle} />
     case 2:
-      return <DeliveredPackagesTable />
+      return <DeliveredPackagesTable data={courierInfo.delivered}/>
     default:
       return null
   }
 }
 
-const fetchCourierData = async (setLoading, token) => {
+const fetchCourierData = async (setLoading, setCourierInfo, token) => {
   setLoading(true);
   
-  const {data, error} = await getCourierPackages(token.authHeader)
+  const {data, error} = await getGroupedPackages(token.authHeader)
 
   if(error) console.log(error)
-  else {
-    console.log("RECEIVED DATA")
 
-    const values = await Promise.all(Object.values(data));
-    
-    // get details
-    const info = {}
+  console.log("RECEIVED DATA")
 
-    info['undelivered'] = courierStats(values);
+  const info = {}
 
-    console.log(info);
-  }
+  // undelivered
+  info['undelivered'] = courierStats(data.groupedPackages);
+
+  info['idle'] = data.idlePackages.sort((el1, el2) => {
+    if(el1.date >= el2.date) return -1
+    else if(el1.date < el2.date) return 1
+    return 0
+  })
+  
+  info['delivered'] = data.deliveredPackages.sort((el1, el2) => {
+    if(el1.date >= el2.date) return -1
+    else if(el1.date < el2.date) return 1
+    return 0
+  })
+  
+  console.log(info);
+
+  setCourierInfo(info);
+
   setLoading(false)
 }
 
 const courierStats = courierInfo => {
 
   const cstats = []
-  for(const info of courierInfo) {
-    cstats.push({
-      courier: info.courier,
-      undelivered: info.data.filter(p => p.status === 'in-transit')
-    })
+  
+  for(const courier of Object.keys(courierInfo)) {
+    cstats.push(
+      {
+        courier,
+        undelivered: courierInfo[courier].filter(p => p.status === "in-transit")
+      }
+    )
   }
+
   return cstats
 }
 
@@ -158,7 +175,7 @@ export default function ManagerHome({token}) {
   };
 
   React.useEffect(() => {
-    fetchCourierData(setLoading, token)
+    fetchCourierData(setLoading, setCourierInfo, token)
   }, [token])
 
   return (
@@ -166,11 +183,12 @@ export default function ManagerHome({token}) {
     <div className={classes.intro}>
       <h1 className={classes.title}>Manager Homepage</h1>
     </div>
-    { loading && (
-      <p>Loading courier information...</p>
-    )}
-    <Paper>
-      <Grid>
+    
+    <Paper style={{position: 'relative'}}>
+      { loading && (
+        <p style={{position: 'absolute', top: -10,}}>Loading courier information...</p>
+      )}
+      <Grid className={classes.root}>
         <Grid item xs={12}>
           <div className={`${classes.tabHeader} ${classes.sectionDesktop}`}>
             <StyledTabs 
@@ -189,12 +207,11 @@ export default function ManagerHome({token}) {
               <StyledTab icon={<QueryBuilderIcon />} className={classes.tabText}/>
               <StyledTab icon={<AssignmentTurnedInIcon />} className={classes.tabText}/>
             </StyledTabs>
-            <Typography className={classes.padding} />
           </div>
         </Grid>
         <Grid item xs={12}>
           <Container>
-            {renderDisplay(currentTab)}
+            { courierInfo ? renderDisplay(currentTab, courierInfo) : null }
           </Container>
         </Grid>
       </Grid>

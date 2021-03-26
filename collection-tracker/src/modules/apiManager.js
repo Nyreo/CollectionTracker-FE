@@ -56,48 +56,52 @@ export async function getPackageRequestByUser(username, auth, courier="false") {
 }
 
 // accounts.get, packages.get?username=username&courier=true
-export async function getCourierPackages(auth) {
+export async function getGroupedPackages(auth) {
   // get all users who are couriers
-  return axios.get(`${baseuri}/accounts/couriers`, 
+  console.log("-getGroupedPackages");
+  
+  const response = await axios.get(`${baseuri}/packages`, 
   {
     headers: {
       'Authorization': auth
     }
   })
-  // returns user details
-  .then(response => response.data.data.couriers)
-  .then(couriers => {
-    const courierData = {}
+  .then(response => response.data.data)
+  .catch(error => { return {error}})
 
-    couriers.forEach(courier => {
-      const cPackages = axios.get(`${baseuri}/packages?username=${courier}&courier=true&status=any`, {
-        headers: {
-          'Authorization': auth
+  // get grouped data
+  if(!response.error) {
+
+    const groupedPackages = {}
+    const idlePackages = []
+    const deliveredPackages = []
+
+    response.forEach(p => {
+      if(p.courier) {
+        if(!groupedPackages[p.courier]) {
+          groupedPackages[p.courier] = [p]
+        } else {
+          groupedPackages[p.courier].push(p);
         }
-      }).then(response => {
-        return { courier, data: response.data.data}
-      })
+      } else {
+        idlePackages.push(p);
+      }
 
-      courierData[courier] = cPackages
+      if(p.status === "delivered") deliveredPackages.push(p);
     })
-    
-    return {data: courierData}
-  })
-  .catch(error => console.log(error))
 
-  // get all packages for each courier
-    // those that are not yet delivered
-      // return { 'courier' : packages }
+    return {data : {
+      groupedPackages,
+      idlePackages,
+      deliveredPackages
+      }
+    }
+  } else return response.error
 }
 
 // packages.get
 export async function getIdlePackages(auth) {
   // get all packages who's status $eq : not-dispatched
-}
-
-export async function getDeliveredPackages(auth) {
-  // get all packages who's status $eq : delivered
-  // sort by delivery time
 }
 
 export async function getSpecificPackage(auth, trackingnumber) {

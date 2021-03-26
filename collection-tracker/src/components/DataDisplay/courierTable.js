@@ -17,27 +17,58 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-const useRowStyles = makeStyles({
+const useRowStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       borderBottom: 'unset',
     },
   },
-});
-
-const useTableStyles = makeStyles({
-  tableContainer: {
-    maxHeight: 440,
-    margin: "20px 0"
+  detailsHeader: {
+    backgroundColor: 'white',
+  },
+  detailsTh: {
+    fontWeight: 700,
+  },
+  noMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: "none"
+    }
+  },
+  title: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1em',
+    }
+  },
+  row: {
+    margin: 0,
+    padding : 0,
+  },
+  collapseCell: {
+    lineHeight: '0.5'
   }
-})
+}));
+
+const useTableStyles = makeStyles((theme) => ({
+  tableContainer: {
+    height: '60vh',
+    maxHeight: '60vh',
+  },
+  noMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: "none"
+    }
+  },
+}));
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: colourTheme.primary.main,
     color: theme.palette.common.white,
     fontWeight: 700,
-    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      fontSize : 12,
+      lineHeight: 1,
+    }
   },
   body: {
     fontSize: 14,
@@ -45,8 +76,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row(props) {
-  const { row } = props;
+function Row({data}) {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
@@ -58,38 +88,36 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
+        <TableCell>
+          {data.courier}
         </TableCell>
-        <TableCell>{row.calories}</TableCell>
+        <TableCell>{data.undelivered.length}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+        <TableCell style={{padding: 0}} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Courier Details
+            <Box>
+              <Typography className={classes.title} variant="h6" component="div">
+                Undelivered Package(s)
               </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
+              <Table size="small" aria-label="package-details">
+                <TableHead className={`${classes.detailsHeader}`}>
                   <TableRow>
-                    <TableCell>Tracking No.</TableCell>
-                    <TableCell>Address</TableCell>
-                    <TableCell>Postcode</TableCell>
-                    <TableCell>Date Posted</TableCell>
+                    <TableCell className={classes.detailsTh}>Tracking No.</TableCell>
+                    <TableCell className={classes.detailsTh}>Address</TableCell>
+                    <TableCell className={classes.detailsTh}>Postcode</TableCell>
+                    <TableCell className={`${classes.detailsTh} ${classes.noMobile}`}>Date Posted</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
+                  {data.undelivered.map(p => (
+                    <TableRow className={classes.row} key={`undelievered.${p.date}`}>
+                      <TableCell className={classes.collapseCell}>
+                        {p._id}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell>{historyRow.amount}</TableCell>
-                      <TableCell>
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
+                      <TableCell className={classes.collapseCell}>{p.address}</TableCell>
+                      <TableCell className={classes.collapseCell}>{p.destPostcode}</TableCell>
+                      <TableCell className={`${classes.collapseCell} ${classes.noMobile}`}>{(new Date(p.date)).toLocaleString()}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -102,24 +130,33 @@ function Row(props) {
   );
 }
 
-export default function CourierTable({data}) {
+const generateRows = (courierData) => {
+  
+  return courierData.map(courier => {
+    return courier.undelivered.length > 0 ? (
+      <Row key={`table${courier.courier}`}data={courier} />
+    ) 
+    : 
+    null
+  })
+}
 
-  // console.log("COURIER_TABLE");
-  // console.log(data);
+export default function CourierTable({data}) {
 
   const classes = useTableStyles()
 
   return (
     <TableContainer className={classes.tableContainer}>
       <Table stickyHeader aria-label="collapsible table" size='small'>
-        <TableHead>
+        <TableHead >
           <TableRow style={{backgroundColor: colourTheme.primary.main}}>
             <StyledTableCell />
             <StyledTableCell>Courier</StyledTableCell>
-            <StyledTableCell fullWidth>Undelivered Packages</StyledTableCell>
+            <StyledTableCell>Packages</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+          {generateRows(data)}
         </TableBody>
       </Table>
     </TableContainer>
