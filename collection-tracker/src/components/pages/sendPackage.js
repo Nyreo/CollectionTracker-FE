@@ -115,7 +115,7 @@ function getStepContent(step, _package, updatePackage) {
   }
 }
 
-export default function SendPackage({token}) {
+export default function SendPackage({token, updateNotification}) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [trackingNumber, setTrackingNumber] = useState(null)
@@ -140,17 +140,24 @@ export default function SendPackage({token}) {
     const nextStep = activeStep + 1
 
     if(nextStep >= steps.length) {
+      // if last step
       setLoading(true)
 
       console.log("Sending package...");
 
-      // send
+      // send - wait for response
       const response = await postPackageRequest(_package, token.authHeader)
     
       console.log(response)
 
-      if(response.error) console.log(response.error);
+      if(response.error) {
+        // if an error occurred, shwo the notification
+        const notification = {message: response.error, type: 'error'}
+        updateNotification(notification);
+      }
       else {
+        // update response tracking number
+        // move to the next pagination
         setTrackingNumber(response.data.data.trackingNumber)
         setActiveStep(nextStep);
       }
@@ -158,7 +165,6 @@ export default function SendPackage({token}) {
     } else {
       setActiveStep(nextStep);
     }
-    
   };
 
   const handleBack = () => {
@@ -170,57 +176,66 @@ export default function SendPackage({token}) {
       <CssBaseline />
       <main className={classes.layout}>
         <Paper className={classes.paper}>
-          <Typography className={classes.title} component="h1" variant="h4" align="center">
-            Sending a Package.
-          </Typography>
-          { loading && (
-            <CircularProgress />
-          )}
-          <Stepper activeStep={activeStep} className={classes.stepper}>
-            {steps.map((label) => (
-              <Step style={{color: 'black'}} key={label}>
-                <StepLabel >{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <>
-            {activeStep === steps.length ? (
+          {navigator.onLine ? 
+            (
               <>
-                <Typography className={classes.thankYou} variant="h5" gutterBottom>
-                  Thank you for you package.
-                </Typography>
-                <Typography className={classes.thankYouSub} variant="subtitle1">
-                  We have received your request! This package (and all other submitted packages) can be tracked on the 
-                  Home page. The tracking number for this request is 
-                  <Link to='/'>
-                   {trackingNumber}
-                  </Link>
-                </Typography>
-              </>
-            ) : (
+              <Typography className={classes.title} component="h1" variant="h4" align="center">
+                Sending a Package.
+              </Typography>
+              { loading && (
+                <CircularProgress />
+              )}
+              <Stepper activeStep={activeStep} className={classes.stepper}>
+                {steps.map((label) => (
+                  <Step style={{color: 'black'}} key={label}>
+                    <StepLabel >{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
               <>
-                {getStepContent(activeStep, _package, updatePackage)}
-                <div className={classes.buttons}>
-                  {activeStep !== 0 && (
-                    <Button onClick={handleBack} className={classes.backButton}>
-                      Back
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.nextButton}
-                  >
-                    {activeStep === steps.length - 1 ? 'Send Package' : 'Next'}
-                  </Button>
-                </div>
-                {activeStep !== 0 && (
-                  <Typography className={classes.mastif}>If you want to change any details, simply use the back button</Typography>
+                {activeStep === steps.length ? (
+                  <>
+                    <Typography className={classes.thankYou} variant="h5" gutterBottom>
+                      Thank you for you package.
+                    </Typography>
+                    <Typography className={classes.thankYouSub} variant="subtitle1">
+                      We have received your request! This package (and all other submitted packages) can be tracked on the 
+                      Home page. The tracking number for this request is 
+                      <Link to='/'>
+                      {trackingNumber}
+                      </Link>
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    {getStepContent(activeStep, _package, updatePackage)}
+                    <div className={classes.buttons}>
+                      {activeStep !== 0 && (
+                        <Button onClick={handleBack} className={classes.backButton}>
+                          Back
+                        </Button>
+                      )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                        className={classes.nextButton}
+                      >
+                        {activeStep === steps.length - 1 ? 'Send Package' : 'Next'}
+                      </Button>
+                    </div>
+                    {activeStep !== 0 && (
+                      <Typography className={classes.mastif}>If you want to change any details, simply use the back button</Typography>
+                    )}
+                  </>
                 )}
               </>
-            )}
-          </>
+            </>
+          )
+        :
+          (
+            <Typography>You must be online to use this feature.</Typography>
+          )}
         </Paper>
       </main>
     </>
