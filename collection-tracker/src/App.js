@@ -1,14 +1,17 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, lazy, Suspense} from 'react'
 
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 // router
-import PageRouter from './components/pagerouter';
 
 import headerImage from './images/header-photo.jpg';
 
-import FeedbackBox from './components/feedbackBox'
+import PageRouter from './components/pagerouter';
+
+const FeedbackBox = lazy(() => import('./components/feedbackBox'))
+
+const renderLoader = () => <p>Loading</p>;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,12 +71,15 @@ const App = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <div className={classes.root}>
-        <FeedbackBox 
-          message={notification.message} 
-          type={notification.type}
-          open={open}
-          setOpen={(val) => setOpen(val)}
-        />
+        <Suspense fallback={renderLoader()}>
+          <FeedbackBox 
+            message={notification.message} 
+            type={notification.type}
+            open={open}
+            setOpen={(val) => setOpen(val)}
+          />
+        </Suspense>
+        
         <PageRouter 
           token={token} 
           saveToken={saveToken}

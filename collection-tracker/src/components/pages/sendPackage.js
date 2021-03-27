@@ -149,13 +149,16 @@ export default function SendPackage({token}) {
     
       console.log(response)
 
-      if(response.error) console.log("An error occured...");
+      if(response.error) console.log(response.error);
       else {
         setTrackingNumber(response.data.data.trackingNumber)
+        setActiveStep(nextStep);
       }
       setLoading(false)
-    } 
-    setActiveStep(nextStep);
+    } else {
+      setActiveStep(nextStep);
+    }
+    
   };
 
   const handleBack = () => {
