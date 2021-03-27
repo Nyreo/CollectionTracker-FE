@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseuri = "http://localhost:8080/v3"
+const baseuri = process.env.NODE_ENV === 'production' ? "https://mitch137-ct-api.herokuapp.com/" : "http://localhost:8080/v3"
 
 const generateToken = (userDetails) => {
   return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;

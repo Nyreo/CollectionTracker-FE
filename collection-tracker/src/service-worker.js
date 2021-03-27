@@ -64,8 +64,10 @@ registerRoute(
 
 // api caching test
 registerRoute(
-  new RegExp('http://.*:8080'),
-  new NetworkFirst()
+  new RegExp('http://localhost:8080/v3/packages.*'),
+  new NetworkFirst({
+    cacheName: 'packages-cache',
+  })
 )
 
 // This allows the web app to trigger skipWaiting via
