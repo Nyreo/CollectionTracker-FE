@@ -25,7 +25,7 @@ const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
         {/* send package */}
         <Route render={
           (props) => token ? 
-          <SendPackage {...props} token={token} />
+          <SendPackage {...props} token={token} updateNotification={updateNotification}/>
           :
           <Redirect to='/' />
         } 

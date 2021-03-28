@@ -1,4 +1,5 @@
 import {useState, useEffect, lazy, Suspense} from 'react'
+import { isMobile } from 'react-device-detect';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 const theme = createMuiTheme()
 
 const App = () => {
-
   const classes = useStyles();
 
   const getToken = () => {
@@ -44,6 +44,13 @@ const App = () => {
     setToken(_token);
   }
 
+  const savePwaChoice = choice => {
+    localStorage.setItem('pwaInstallation', choice);
+    setPwaOpen(choice);
+  }
+
+  const getPwaChoice = () => localStorage.getItem('pwaInstallation') ? false : true;
+
   const clearToken = () => {
     localStorage.removeItem('token')
     setToken(null)
@@ -56,17 +63,16 @@ const App = () => {
 
   // whether the user is authorized
   const [token, setToken] = useState(getToken())
-
   // error
   const [notification, setNotification] = useState({});
   const [open, setOpen] = useState(false)
+  // whether the user has read the PWA message
+  const [pwaOpen, setPwaOpen] = useState(getPwaChoice());
+
 
   useEffect(() => {
     console.log("token has been updated", token)
   }, [token])
-
-
-
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -77,6 +83,17 @@ const App = () => {
             type={notification.type}
             open={open}
             setOpen={(val) => setOpen(val)}
+          />
+        </Suspense>
+        <Suspense fallback={renderLoader()}>
+          <FeedbackBox 
+            message={
+              <span>Hi! This website can be downloaded to your device! Find out more <a href='https://support.google.com/chrome/answer/9658361?co=GENIE.Platform%3DDesktop&hl=en'>PWA Installation</a></span>  
+            } 
+            type={"notification"}
+            open={pwaOpen && isMobile}
+            autoHide={false}
+            setOpen={savePwaChoice}
           />
         </Suspense>
         
