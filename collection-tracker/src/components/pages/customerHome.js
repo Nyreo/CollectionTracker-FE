@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/styles'
 import { getPackageRequestByUser } from '../../modules/packageHandler'
 
 // component imports
-import PackageList from '../packageList'
+import PackageList from '../display/packageList'
 
 // styles
 import colourTheme from '../../styles/theme'

@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { makeStyles } from '@material-ui/styles'
 
@@ -16,7 +17,7 @@ import { makeStyles } from '@material-ui/styles'
 import { getPackageRequestByUser, patchPackagePickup } from '../../modules/packageHandler'
 
 // component imports
-import PackageList from '../packageList'
+import PackageList from '../display/packageList'
 import DeliveryDialog from '../popups/delivery'
 
 // styles
@@ -125,6 +126,7 @@ const CourierHome = ({token, updateNotification}) => {
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [searching, setSearching] = useState(false)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [openDelivery, setOpenDelivery] = useState(false)
 
@@ -169,6 +171,8 @@ const CourierHome = ({token, updateNotification}) => {
       return
     }
 
+    setSearching(true)
+
     if(!checkExistingPackages()) {
       // package does not already exist
       const response = await patchPackagePickup(trackingNumber, "in-transit", token.authHeader)
@@ -191,8 +195,7 @@ const CourierHome = ({token, updateNotification}) => {
       console.log("package already exists... loading delivery")
       setOpenDelivery(true);
     }
-
-    
+    setSearching(false)
   }
 
   // returns only the needed informatio from packages
@@ -265,7 +268,12 @@ const CourierHome = ({token, updateNotification}) => {
             aria-label="enter-trackingnumber"
             onClick = {handleTrackingSubmit}
           >
-            <SearchIcon className={classes.trackingIcon} />
+            { searching ? 
+              <CircularProgress />
+              :
+              <SearchIcon className={classes.trackingIcon} />
+            }
+            
           </IconButton>
         </Paper>
       </Grid>   

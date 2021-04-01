@@ -19,10 +19,10 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import colourTheme from '../../styles/theme';
 
-import CourierTable from '../DataDisplay/courierTable';
+import CourierTable from '../display/courierTable';
 
-const IdlePackageTable = lazy(() => import('../DataDisplay/IdlePackageTable'))
-const DeliveredPackagesTable = lazy(() => import('../DataDisplay/DeliveredPackagesTable'))
+const IdlePackageTable = lazy(() => import('../display/IdlePackageTable'))
+const DeliveredPackagesTable = lazy(() => import('../display/DeliveredPackagesTable'))
 
 const renderLoader = () => <p>Loading</p>;
 

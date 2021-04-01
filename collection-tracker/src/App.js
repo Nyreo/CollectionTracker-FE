@@ -10,7 +10,7 @@ import headerImage from './images/header-photo.jpg';
 
 import PageRouter from './components/pagerouter';
 
-const FeedbackBox = lazy(() => import('./components/feedbackBox'))
+const FeedbackBox = lazy(() => import('./components/popups/feedbackBox'))
 
 const renderLoader = () => <p>Loading</p>;
 

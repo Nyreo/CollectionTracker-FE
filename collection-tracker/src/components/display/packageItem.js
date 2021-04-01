@@ -12,7 +12,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 // colours
-import colourTheme from '../styles/theme'
+import colourTheme from '../../styles/theme'
 
 const useStyles = makeStyles((theme) => ({
   root: {
