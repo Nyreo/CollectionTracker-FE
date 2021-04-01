@@ -43,9 +43,6 @@ const useRowStyles = makeStyles((theme) => ({
     margin: 0,
     padding : 0,
   },
-  collapseCell: {
-    lineHeight: '0.5'
-  }
 }));
 
 const useTableStyles = makeStyles((theme) => ({
@@ -67,7 +64,6 @@ const StyledTableCell = withStyles((theme) => ({
     fontWeight: 700,
     [theme.breakpoints.down('sm')]: {
       fontSize : 12,
-      lineHeight: 1,
     }
   },
   body: {
