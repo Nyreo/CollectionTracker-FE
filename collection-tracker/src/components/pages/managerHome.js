@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getGroupedPackages } from '../../modules/apiManager';
+import { getGroupedPackages } from '../../modules/packageHandler';
 
 import Paper from '@material-ui/core/Paper'
 import { makeStyles, withStyles } from '@material-ui/core/styles';

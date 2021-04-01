@@ -13,7 +13,7 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequestByUser, patchPackagePickup } from '../../modules/apiManager'
+import { getPackageRequestByUser, patchPackagePickup } from '../../modules/packageHandler'
 
 // component imports
 import PackageList from '../packageList'
@@ -104,21 +104,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fetchPackages = async (token, setPackages, setLoading) => {
+const fetchPackages = async (token, setPackages, setLoading, setError) => {
   const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader, true)
   
-  if(error) console.log(error)
+  if(error) {
+    console.log(error.toJSON().message)
+    if(error.toJSON().message === 'Network Error') {
+      setError(error)
+    }
+  }
   else setPackages(data.data)
 
   setLoading(false)
 }
 
-const CourierHome = ({token, updateNotification, history}) => {
+const CourierHome = ({token, updateNotification}) => {
   
   const classes = useStyles()
 
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [openDelivery, setOpenDelivery] = useState(false)
 
@@ -228,7 +234,7 @@ const CourierHome = ({token, updateNotification, history}) => {
   }, [packages])
 
   useEffect(() => {
-    fetchPackages(token, setPackages, setLoading)
+    fetchPackages(token, setPackages, setLoading, setError)
   }, [token])
   
   return (
@@ -266,6 +272,10 @@ const CourierHome = ({token, updateNotification, history}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
+        {
+          error &&
+          <p className={classes.loading}>There appears to be an issue fetching the packages. Please check your network status.</p>
+        }
       <PackageList packages={packages ? extractPackageData() : null} displayIcon={false}/>
       </Grid>
     </Grid>

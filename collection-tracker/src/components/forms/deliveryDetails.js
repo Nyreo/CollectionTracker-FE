@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import colourTheme from '../../styles/theme';
 
-import { patchPackageDeliver } from '../../modules/apiManager'
+import { patchPackageDeliver } from '../../modules/packageHandler'
 
 const useStyles = makeStyles((theme) => ({
   root: {

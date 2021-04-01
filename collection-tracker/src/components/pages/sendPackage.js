@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 
-import { postPackageRequest } from '../../modules/apiManager'
+import { postPackageRequest } from '../../modules/packageHandler'
 
 import colourTheme from '../../styles/theme'
 

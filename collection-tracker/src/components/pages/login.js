@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import colourTheme from '../../styles/theme'
 
 // module imports
-import { loginRequest } from '../../modules/apiManager';
+import { loginRequest } from '../../modules/userHandler';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
