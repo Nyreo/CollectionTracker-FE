@@ -200,9 +200,18 @@ const CourierHome = ({token, updateNotification}) => {
     // recpName, destPostcode, weight, elapsedTime
     const now = (new Date()).getTime()
 
-    const extractedPackages = packages.map(_package => {
+    // sort packages
+    const sortedPackages = packages.sort((el1, el2) => {
+      if(el1.date >= el2.date) return -1
+      else if(el1.date < el2.date) return 1
+      return 0
+    })
+
+    const extractedPackages = sortedPackages.map(_package => {
+      
       const rawElapsedTime = now - _package.date
-      const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
+      const dayTime = 24 * 60 * 60 * 1000
+      const elapsedDays = Math.floor(rawElapsedTime / dayTime)
 
       const datePosted = (new Date(_package.date)).toLocaleString();
 
@@ -214,18 +223,10 @@ const CourierHome = ({token, updateNotification}) => {
         "Address" : _package.address,
         "Package Weight" : `${_package.weight}kg`,
         "Date Posted": datePosted,
-        "Elapsed Time" : elapsedTime,
+        "Elapsed Time" : elapsedDays > 1 ? `${elapsedDays} Days` : `>1 Day(s)`,
       }
       return newPackage
     })
-
-    // sort packages
-    extractedPackages.sort((el1, el2) => {
-      if(el1['Elapsed Time'] < el2['Elapsed Time']) return -1
-      else if(el1['Elapsed Time'] >= el2['Elapsed Time']) return 1
-      return 0
-    })
-
     return extractedPackages
   }
 

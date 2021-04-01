@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {lazy, Suspense} from 'react'
 
 import { getGroupedPackages } from '../../modules/packageHandler';
 
@@ -20,8 +20,11 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import colourTheme from '../../styles/theme';
 
 import CourierTable from '../DataDisplay/courierTable';
-import IdlePackageTable from '../DataDisplay/IdlePackageTable';
-import DeliveredPackagesTable from '../DataDisplay/DeliveredPackagesTable';
+
+const IdlePackageTable = lazy(() => import('../DataDisplay/IdlePackageTable'))
+const DeliveredPackagesTable = lazy(() => import('../DataDisplay/DeliveredPackagesTable'))
+
+const renderLoader = () => <p>Loading</p>;
 
 const StyledTabs = withStyles({
   indicator: {
@@ -214,7 +217,7 @@ export default function ManagerHome({token}) {
             <Typography className={classes.padding} />
           </div>
           <div className={`${classes.tabHeader} ${classes.sectionMobile}`}>
-            <StyledTabs fullWidth variant="fullWidth" value={currentTab} onChange={handleChange} aria-label="styled tabs example">
+            <StyledTabs variant="fullWidth" value={currentTab} onChange={handleChange} aria-label="styled tabs example">
               <StyledTab icon={<LocalShippingIcon />} className={classes.tabText}/>
               <StyledTab icon={<QueryBuilderIcon />} className={classes.tabText}/>
               <StyledTab icon={<AssignmentTurnedInIcon />} className={classes.tabText}/>
@@ -223,7 +226,9 @@ export default function ManagerHome({token}) {
         </Grid>
         <Grid item xs={12}>
           <Container style={{maxHeight: '50vh'}}>
-            { courierInfo ? renderDisplay(currentTab, courierInfo) : null }
+            <Suspense fallback={renderLoader()}>
+              { courierInfo ? renderDisplay(currentTab, courierInfo) : null }
+            </Suspense>
           </Container>
         </Grid>
       </Grid>
