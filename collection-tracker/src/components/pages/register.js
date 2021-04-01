@@ -17,7 +17,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 //  module imports
-import { registerRequest } from '../../modules/apiManager';
+import { registerRequest } from '../../modules/userHandler';
 
 const useStyles = makeStyles((theme) => ({
   root: {

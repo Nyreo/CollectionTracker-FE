@@ -13,7 +13,7 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequestByUser, patchPackagePickup } from '../../modules/apiManager'
+import { getPackageRequestByUser, patchPackagePickup } from '../../modules/packageHandler'
 
 // component imports
 import PackageList from '../packageList'
@@ -104,21 +104,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fetchPackages = async (token, setPackages, setLoading) => {
+const fetchPackages = async (token, setPackages, setLoading, setError) => {
   const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader, true)
   
-  if(error) console.log(error)
+  if(error) {
+    console.log(error.toJSON().message)
+    if(error.toJSON().message === 'Network Error') {
+      setError(error)
+    }
+  }
   else setPackages(data.data)
 
   setLoading(false)
 }
 
-const CourierHome = ({token, updateNotification, history}) => {
+const CourierHome = ({token, updateNotification}) => {
   
   const classes = useStyles()
 
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [openDelivery, setOpenDelivery] = useState(false)
 
@@ -194,9 +200,18 @@ const CourierHome = ({token, updateNotification, history}) => {
     // recpName, destPostcode, weight, elapsedTime
     const now = (new Date()).getTime()
 
-    const extractedPackages = packages.map(_package => {
+    // sort packages
+    const sortedPackages = packages.sort((el1, el2) => {
+      if(el1.date >= el2.date) return -1
+      else if(el1.date < el2.date) return 1
+      return 0
+    })
+
+    const extractedPackages = sortedPackages.map(_package => {
+      
       const rawElapsedTime = now - _package.date
-      const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
+      const dayTime = 24 * 60 * 60 * 1000
+      const elapsedDays = Math.floor(rawElapsedTime / dayTime)
 
       const datePosted = (new Date(_package.date)).toLocaleString();
 
@@ -208,18 +223,10 @@ const CourierHome = ({token, updateNotification, history}) => {
         "Address" : _package.address,
         "Package Weight" : `${_package.weight}kg`,
         "Date Posted": datePosted,
-        "Elapsed Time" : elapsedTime,
+        "Elapsed Time" : elapsedDays > 1 ? `${elapsedDays} Days` : `>1 Day(s)`,
       }
       return newPackage
     })
-
-    // sort packages
-    extractedPackages.sort((el1, el2) => {
-      if(el1['Elapsed Time'] < el2['Elapsed Time']) return -1
-      else if(el1['Elapsed Time'] >= el2['Elapsed Time']) return 1
-      return 0
-    })
-
     return extractedPackages
   }
 
@@ -228,7 +235,7 @@ const CourierHome = ({token, updateNotification, history}) => {
   }, [packages])
 
   useEffect(() => {
-    fetchPackages(token, setPackages, setLoading)
+    fetchPackages(token, setPackages, setLoading, setError)
   }, [token])
   
   return (
@@ -266,6 +273,10 @@ const CourierHome = ({token, updateNotification, history}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
+        {
+          error &&
+          <p className={classes.loading}>There appears to be an issue fetching the packages. Please check your network status.</p>
+        }
       <PackageList packages={packages ? extractPackageData() : null} displayIcon={false}/>
       </Grid>
     </Grid>

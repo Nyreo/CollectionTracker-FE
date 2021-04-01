@@ -19,6 +19,11 @@ const useRowStyles = makeStyles((theme) => ({
     color: '#E94D4D',
     marginRight: 10,
   },
+  trackingId: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex'
+    }
+  },
   noMobile: {
     [theme.breakpoints.down('sm')]: {
       display: "none"
@@ -36,22 +41,23 @@ function Row({data}) {
 
   const now = (new Date()).getTime()
   const rawElapsedTime = now - data.date
-  const allowedTime = 48 * 60 * 60 * 1000
+  const dayTime = 24 * 60 * 60 * 1000
+  const allowedTime = 2
 
-  const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
+  const elapsedDays = Math.floor(rawElapsedTime / dayTime)
 
-  const flagged = rawElapsedTime >= allowedTime
+  const flagged = elapsedDays >= allowedTime
 
   return (
     <React.Fragment>
       <TableRow className={`${classes.root}`}>
-        <TableCell>
-          { flagged && (
+        <TableCell className={classes.trackingId}>
+        { flagged && (
             <Tooltip title="Waiting too long" aria-label="add">
               <FlagIcon className={classes.flagged}/>
           </Tooltip>
           )}
-          {data._id}
+          <span>{data._id}</span>
         </TableCell>
         <TableCell className={classes.noMobile}>
           {(new Date(data.date)).toLocaleString()}
@@ -60,7 +66,7 @@ function Row({data}) {
           {(new Date(data.date)).toLocaleDateString()}
         </TableCell>
         <TableCell>
-          {elapsedTime}
+          {elapsedDays > 1 ? `${elapsedDays} Days` : `>1 Day(s)`}
         </TableCell>
       </TableRow>
     </React.Fragment>
@@ -81,8 +87,8 @@ const StyledTableCell = withStyles((theme) => ({
 
 const useTableStyles = makeStyles((theme) => ({
   tableContainer: {
-    height: '60vh',
-    maxHeight: '60vh',
+    height: '65vh',
+    maxHeight: 'inherit',
   },
   noMobile: {
     [theme.breakpoints.down('sm')]: {
