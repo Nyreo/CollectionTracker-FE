@@ -1,7 +1,15 @@
 # Collection Tracker Frontend
 Front-end repository for Joseph Mitchell's M137CEM Coursework Submission.
 
-## Complete Tasks
+## Live Project
+
+https://mitch137-collectiotracking-fe.herokuapp.com/
+
+## Description
+
+This project is the front-end component for a system designed for the module M137CEM at Coventry University (2021). The purpose of the application is to allow differing users dynamic access to a collection tracker which can also act as a progressive web-app (PWA).
+
+## Completed Tasks
 
 ## Stage 1 [complete]
 
@@ -48,7 +56,7 @@ The parcel details now appear on the courier's homepage but only for the parcels
 
 ---
 
-## Stage 2 [complete]
+### Stage 2 [complete]
 
 Now lets complete the delivery process.
 
@@ -64,3 +72,13 @@ In addition to the data entered by the courier, the system should automatically 
 3. The parcel status should now be changed to `delivered` which means this should be flagged up on the homepage of the person posting the item.
 
 ---
+
+ ### Stage 3 [complete]
+ 
+ You are required to build a series of tracking pages so that:
+ 
+1. The courier has a list of all the parcels they are yet to deliver, displaying the tracking number, address, postcode and date posted.
+2. There should be a manager role who has access to a screen that lists all the couriers with parcels still to deliver, showing the name of courier and the number of parcels still undelivered.
+    1. Clicking on one of the couriers should display the list from point 1 for that courier.
+3. They should also see a list of the parcels that have not been picked up by the courier with the one posted earliest at the top of the list. Any parcel that has been waiting for longer than 48 hours should be flagged.
+ 4. They should also see a list of delivered parcels with the most recent delivery at the top. Each should show the tracking number, name, address and postcode.

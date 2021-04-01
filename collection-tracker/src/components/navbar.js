@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavBar({token, clearToken, history}) {
+export default function NavBar({token, clearToken}) {
   const classes = useStyles();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -139,6 +139,15 @@ export default function NavBar({token, clearToken, history}) {
         return [
         (
           <MenuItem key={'menu.courier.logout'}>
+            <Link to='' onClick={clearToken} className={classes.menuLink}>
+            <p>Logout</p>
+            </Link>
+          </MenuItem>
+        )]
+      case 'manager':
+        return [
+        (
+          <MenuItem key={'menu.manager.logout'}>
             <Link to='' onClick={clearToken} className={classes.menuLink}>
             <p>Logout</p>
             </Link>
@@ -208,6 +217,21 @@ export default function NavBar({token, clearToken, history}) {
         return (
           <>
             <Typography className={classes.welcomeMessage}>Welcome {token.userDetails.username}</Typography>
+            <Link to='/send' className={classes.link}>
+            </Link>
+            <Button 
+              color="inherit" 
+              className={classes.menuButton}
+              onClick={clearToken}  
+            ><MeetingRoomIcon className={classes.menuIcon}/>
+              Logout
+            </Button>
+          </>
+        )
+      case 'manager': 
+        return (
+          <>
+            <Typography className={classes.welcomeMessage}>Manager View</Typography>
             <Link to='/send' className={classes.link}>
             </Link>
             <Button 

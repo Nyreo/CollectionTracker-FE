@@ -1,4 +1,5 @@
 import React from 'react';
+import {isMobile} from 'react-device-detect';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +12,7 @@ import { Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: '6em',
+    
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -22,13 +24,18 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: 'border-box',
     color: 'whitesmoke',
     wordBreak: 'break-word',
-
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0
+    }
   },
   message: {
     flex: 1,
     textTransform: 'capitalize',
     fontWeight: 700,
-    fontSize: '1.2em'
+    fontSize: '1.2em',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.9em'
+    }
   },
   notification: {
     backgroundColor: 'whitesmoke',
@@ -44,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function FeedbackBox({open, setOpen, message, type}) {
+export default function FeedbackBox({open, setOpen, message, type, autoHide}) {
 
   const classes = useStyles()
 
@@ -68,9 +75,9 @@ export default function FeedbackBox({open, setOpen, message, type}) {
 
   return (
     <Snackbar
-      anchorOrigin={{ vertical: "top", horizontal: 'center' }}
+      anchorOrigin={isMobile ? { vertical: "top", horizontal: 'center' } : { vertical: "top", horizontal: 'center' }}
       open={open}
-      autoHideDuration={6000}
+      autoHideDuration={autoHide ? 6000 : 10000000}
       onClose={handleClose}
       message={message}
     >

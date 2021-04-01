@@ -12,7 +12,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 // colours
-import colourTheme from '../styles/theme'
+import colourTheme from '../../styles/theme'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       position: 'absolute',
       right: -4,
-      top: 4,
+      top: 0,
+      height: 70,
       width: '25%',
       backgroundColor: 'white',
     }

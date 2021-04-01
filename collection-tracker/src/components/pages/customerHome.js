@@ -4,10 +4,10 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequestByUser } from '../../modules/apiManager'
+import { getPackageRequestByUser } from '../../modules/packageHandler'
 
 // component imports
-import PackageList from '../packageList'
+import PackageList from '../display/packageList'
 
 // styles
 import colourTheme from '../../styles/theme'
@@ -71,13 +71,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const fetchPackages = async (token, setPackages, setLoading) => {
+const fetchPackages = async (token, setPackages, setLoading, setError) => {
   const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader)
   
-  if(error) console.log(error)
-  else setPackages(data.data)
-
   setLoading(false)
+
+  if(error) {
+    console.log(error.toJSON().message)
+    if(error.toJSON().message === 'Network Error') {
+      setError(error)
+    }
+  }
+  else setPackages(data.data)
 }
 
 const CustomerHome = ({token}) => {
@@ -86,6 +91,7 @@ const CustomerHome = ({token}) => {
 
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   // returns only the needed informatio from packages
   const extractPackageData = () => {
@@ -124,7 +130,7 @@ const CustomerHome = ({token}) => {
   }, [packages])
 
   useEffect(() => {
-    fetchPackages(token ,setPackages, setLoading)
+    fetchPackages(token ,setPackages, setLoading, setError)
   }, [token])
   
   return (
@@ -139,10 +145,15 @@ const CustomerHome = ({token}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
+        {
+          error &&
+          <p className={classes.loading}>There appears to be an issue fetching the packages. Please check your network status.</p>
+        }
         <PackageList 
-          packages={packages ? extractPackageData() : null}
-          displayIcon={true}
-        />
+            packages={packages ? extractPackageData() : null}
+            displayIcon={true}
+          />
+        
       </Grid>
     </Grid>
   )

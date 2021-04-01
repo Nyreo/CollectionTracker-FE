@@ -25,7 +25,7 @@ const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
         {/* send package */}
         <Route render={
           (props) => token ? 
-          <SendPackage {...props} token={token} />
+          <SendPackage {...props} token={token} updateNotification={updateNotification}/>
           :
           <Redirect to='/' />
         } 
@@ -45,7 +45,7 @@ const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {
           (props) => token ? 
             <Redirect to='/' /> 
             : 
-            <Register {...props} saveToken={saveToken}/>
+            <Register {...props} saveToken={saveToken} updateNotification={updateNotification}/>
         } 
         path="/register" 
         />

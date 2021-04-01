@@ -9,14 +9,15 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { makeStyles } from '@material-ui/styles'
 
 // module imports
-import { getPackageRequestByUser, patchPackagePickup } from '../../modules/apiManager'
+import { getPackageRequestByUser, patchPackagePickup } from '../../modules/packageHandler'
 
 // component imports
-import PackageList from '../packageList'
+import PackageList from '../display/packageList'
 import DeliveryDialog from '../popups/delivery'
 
 // styles
@@ -104,21 +105,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fetchPackages = async (token, setPackages, setLoading) => {
+const fetchPackages = async (token, setPackages, setLoading, setError) => {
   const { data, error } = await getPackageRequestByUser(token.userDetails.username, token.authHeader, true)
   
-  if(error) console.log(error)
+  if(error) {
+    console.log(error.toJSON().message)
+    if(error.toJSON().message === 'Network Error') {
+      setError(error)
+    }
+  }
   else setPackages(data.data)
 
   setLoading(false)
 }
 
-const CourierHome = ({token, updateNotification, history}) => {
+const CourierHome = ({token, updateNotification}) => {
   
   const classes = useStyles()
 
   const [packages, setPackages] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [searching, setSearching] = useState(false)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [openDelivery, setOpenDelivery] = useState(false)
 
@@ -163,6 +171,8 @@ const CourierHome = ({token, updateNotification, history}) => {
       return
     }
 
+    setSearching(true)
+
     if(!checkExistingPackages()) {
       // package does not already exist
       const response = await patchPackagePickup(trackingNumber, "in-transit", token.authHeader)
@@ -185,8 +195,7 @@ const CourierHome = ({token, updateNotification, history}) => {
       console.log("package already exists... loading delivery")
       setOpenDelivery(true);
     }
-
-    
+    setSearching(false)
   }
 
   // returns only the needed informatio from packages
@@ -194,28 +203,33 @@ const CourierHome = ({token, updateNotification, history}) => {
     // recpName, destPostcode, weight, elapsedTime
     const now = (new Date()).getTime()
 
-    const extractedPackages = packages.map(_package => {
+    // sort packages
+    const sortedPackages = packages.sort((el1, el2) => {
+      if(el1.date >= el2.date) return -1
+      else if(el1.date < el2.date) return 1
+      return 0
+    })
+
+    const extractedPackages = sortedPackages.map(_package => {
+      
       const rawElapsedTime = now - _package.date
-      const elapsedTime = new Date(rawElapsedTime).toISOString().substr(11, 8)
+      const hourTime = 60 * 60 * 1000;
+      const elapsedHours = Math.floor(rawElapsedTime / hourTime)
+
+      const datePosted = (new Date(_package.date)).toLocaleString();
 
       const newPackage = {
         trackingNumber: _package._id,
         status: _package.status,
         "Recipient Name" : _package.recpName,
         "Destination Postcode": _package.destPostcode,
+        "Address" : _package.address,
         "Package Weight" : `${_package.weight}kg`,
-        "Elapsed Time" : elapsedTime,
+        "Date Posted": datePosted,
+        "Elapsed Time (Hours)" : elapsedHours,
       }
       return newPackage
     })
-
-    // sort packages
-    extractedPackages.sort((el1, el2) => {
-      if(el1['Elapsed Time'] < el2['Elapsed Time']) return -1
-      else if(el1['Elapsed Time'] >= el2['Elapsed Time']) return 1
-      return 0
-    })
-
     return extractedPackages
   }
 
@@ -224,7 +238,7 @@ const CourierHome = ({token, updateNotification, history}) => {
   }, [packages])
 
   useEffect(() => {
-    fetchPackages(token, setPackages, setLoading)
+    fetchPackages(token, setPackages, setLoading, setError)
   }, [token])
   
   return (
@@ -254,7 +268,12 @@ const CourierHome = ({token, updateNotification, history}) => {
             aria-label="enter-trackingnumber"
             onClick = {handleTrackingSubmit}
           >
-            <SearchIcon className={classes.trackingIcon} />
+            { searching ? 
+              <CircularProgress />
+              :
+              <SearchIcon className={classes.trackingIcon} />
+            }
+            
           </IconButton>
         </Paper>
       </Grid>   
@@ -262,6 +281,10 @@ const CourierHome = ({token, updateNotification, history}) => {
         { loading && (
           <p className={classes.loading} style={{flex: '0 0 100%'}}>Loading Packages...</p>
         )}
+        {
+          error &&
+          <p className={classes.loading}>There appears to be an issue fetching the packages. Please check your network status.</p>
+        }
       <PackageList packages={packages ? extractPackageData() : null} displayIcon={false}/>
       </Grid>
     </Grid>

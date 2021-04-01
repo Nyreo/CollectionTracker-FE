@@ -1,41 +1,6 @@
 import axios from 'axios';
 
-const baseuri = "http://localhost:8080/v2"
-
-const generateToken = (userDetails) => {
-  return `Basic ${btoa(`${userDetails.username}:${userDetails.password}`)}`;
-}
-
-export async function loginRequest(credentials) {
-  const authHeader = generateToken(credentials)
-  try {
-    const response = await axios.get(`${baseuri}/accounts`, 
-    {
-      headers: {
-        'Authorization': authHeader
-      }
-    })
-
-    return {response, authHeader}
-
-  } catch (error) {
-    console.log(error)
-
-    return {error: "Invalid login credentials. Please try again."}
-  }
-}
-
-export async function registerRequest(credentials) {
-  try {
-    const response = await axios.post(`${baseuri}/accounts`, credentials)
-
-    const authHeader = generateToken(credentials);
-    return {response, authHeader}
-  } catch (error) {
-    console.log(error)
-    return {error}
-  }
-}
+const baseuri = process.env.NODE_ENV === 'production' ? "https://mitch137-ct-api.herokuapp.com/v3" : "http://localhost:8080/v3"
 
 export async function getPackageRequestByUser(username, auth, courier="false") {
   try {
@@ -53,6 +18,50 @@ export async function getPackageRequestByUser(username, auth, courier="false") {
     console.log(error)
     return {error}
   }
+}
+
+// accounts.get, packages.get?username=username&courier=true
+export async function getGroupedPackages(auth) {
+  // get all users who are couriers
+  console.log("-getGroupedPackages");
+  
+  const response = await axios.get(`${baseuri}/packages`, 
+  {
+    headers: {
+      'Authorization': auth
+    }
+  })
+  .then(response => response.data.data)
+  .catch(error => { return {error}})
+
+  // get grouped data
+  if(!response.error) {
+
+    const groupedPackages = {}
+    const idlePackages = []
+    const deliveredPackages = []
+
+    response.forEach(p => {
+      if(p.courier) {
+        if(!groupedPackages[p.courier]) {
+          groupedPackages[p.courier] = [p]
+        } else {
+          groupedPackages[p.courier].push(p);
+        }
+      } else {
+        idlePackages.push(p);
+      }
+
+      if(p.status === "delivered") deliveredPackages.push(p);
+    })
+
+    return {data : {
+      groupedPackages,
+      idlePackages,
+      deliveredPackages
+      }
+    }
+  } else return response.error
 }
 
 export async function getSpecificPackage(auth, trackingnumber) {

@@ -17,7 +17,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 //  module imports
-import { registerRequest } from '../../modules/apiManager';
+import { registerRequest } from '../../modules/userHandler';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register({saveToken, history}) {
+export default function Register({saveToken, history, updateNotification}) {
   const classes = useStyles();
 
   const [credentials, setCredentials] = useState({
@@ -92,9 +92,6 @@ export default function Register({saveToken, history}) {
     userType: 'customer'
   })
 
-  const [error, setError] = useState(null)
- 
-
   const handleCredentialUpdate = (e) => {
     
     setCredentials({...credentials, [e.target.name]: e.target.value})
@@ -103,10 +100,8 @@ export default function Register({saveToken, history}) {
   }
 
   const updateError = (err) => {
-    setError(err)
-    setTimeout(() => {
-      setError(null)
-    }, 5000)
+    const notification = { message : err, type: 'error'}
+    updateNotification(notification)
   }
 
   const handleFormSubmit = async (e) => {
@@ -145,10 +140,6 @@ export default function Register({saveToken, history}) {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        {/* error message */}
-        {
-          error ? (<span className={classes.error}>{error}</span>) : (null)
-        }
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"
@@ -224,6 +215,7 @@ export default function Register({saveToken, history}) {
           >
             <MenuItem value={"customer"}>Customer</MenuItem>
             <MenuItem value={"courier"}>Courier</MenuItem>
+            <MenuItem value={"manager"}>Manager</MenuItem>
           </Select>
           <FormHelperText>Which type of user are you?</FormHelperText>
           <Button
