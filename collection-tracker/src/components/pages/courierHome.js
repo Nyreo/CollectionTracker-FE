@@ -213,8 +213,8 @@ const CourierHome = ({token, updateNotification}) => {
     const extractedPackages = sortedPackages.map(_package => {
       
       const rawElapsedTime = now - _package.date
-      const dayTime = 24 * 60 * 60 * 1000
-      const elapsedDays = Math.floor(rawElapsedTime / dayTime)
+      const hourTime = 60 * 60 * 1000;
+      const elapsedHours = Math.floor(rawElapsedTime / hourTime)
 
       const datePosted = (new Date(_package.date)).toLocaleString();
 
@@ -226,7 +226,7 @@ const CourierHome = ({token, updateNotification}) => {
         "Address" : _package.address,
         "Package Weight" : `${_package.weight}kg`,
         "Date Posted": datePosted,
-        "Elapsed Time" : elapsedDays > 1 ? `${elapsedDays} Days` : `>1 Day(s)`,
+        "Elapsed Time (Hours)" : elapsedHours,
       }
       return newPackage
     })

@@ -41,35 +41,33 @@ function Row({data}) {
 
   const now = (new Date()).getTime()
   const rawElapsedTime = now - data.date
-  const dayTime = 24 * 60 * 60 * 1000
-  const allowedTime = 2
+  const hourTime = 60 * 60 * 1000
+  const allowedTime = 48
 
-  const elapsedDays = Math.floor(rawElapsedTime / dayTime)
+  const elapsedHours = Math.floor(rawElapsedTime / hourTime)
 
-  const flagged = elapsedDays >= allowedTime
+  const flagged = elapsedHours >= allowedTime
 
   return (
-    <React.Fragment>
-      <TableRow className={`${classes.root}`}>
-        <TableCell className={classes.trackingId}>
-        { flagged && (
-            <Tooltip title="Waiting too long" aria-label="add">
-              <FlagIcon className={classes.flagged}/>
-          </Tooltip>
-          )}
-          <span>{data._id}</span>
-        </TableCell>
-        <TableCell className={classes.noMobile}>
-          {(new Date(data.date)).toLocaleString()}
-        </TableCell>
-        <TableCell className={classes.noDesktop}>
-          {(new Date(data.date)).toLocaleDateString()}
-        </TableCell>
-        <TableCell>
-          {elapsedDays > 1 ? `${elapsedDays} Days` : `>1 Day(s)`}
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
+    <TableRow className={`${classes.root}`}>
+      <TableCell className={classes.trackingId}>
+      { flagged && (
+          <Tooltip title="Waiting too long" aria-label="add">
+            <FlagIcon className={classes.flagged}/>
+        </Tooltip>
+        )}
+        <span>{data._id}</span>
+      </TableCell>
+      <TableCell className={classes.noMobile}>
+        {(new Date(data.date)).toLocaleString()}
+      </TableCell>
+      <TableCell className={classes.noDesktop}>
+        {(new Date(data.date)).toLocaleDateString()}
+      </TableCell>
+      <TableCell>
+        {elapsedHours}
+      </TableCell>
+    </TableRow>
   );
 }
 
@@ -117,7 +115,7 @@ export default function IdlePackageTable({data}) {
           <TableRow style={{backgroundColor: colourTheme.primary.main}}>
             <StyledTableCell>Tracking No.</StyledTableCell>
             <StyledTableCell>Date Posted</StyledTableCell>
-            <StyledTableCell>Time Elapsed</StyledTableCell>
+            <StyledTableCell>Hours Elapsed</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
