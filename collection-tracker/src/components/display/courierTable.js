@@ -1,9 +1,10 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
+// styles
 import colourTheme from '../../styles/theme'
 
-
+// mui
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,6 +15,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+
+// mui icons
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
@@ -21,6 +24,9 @@ const useRowStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       borderBottom: 'unset',
+    },
+    '&:hover': {
+      backgroundColor: 'whitesmoke',
     },
   },
   detailsHeader: {
@@ -41,7 +47,10 @@ const useRowStyles = makeStyles((theme) => ({
   },
   row: {
     margin: 0,
-    padding : 0,
+    padding: 0,
+    '&:hover': {
+      backgroundColor: 'whitesmoke',
+    },
   },
 }));
 
@@ -55,6 +64,11 @@ const useTableStyles = makeStyles((theme) => ({
       display: "none"
     }
   },
+  desc: {
+    color: 'gray',
+    textAlign: 'left',
+    paddingBottom: theme.spacing(2),
+  }
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -63,7 +77,7 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.white,
     fontWeight: 700,
     [theme.breakpoints.down('sm')]: {
-      fontSize : 12,
+      fontSize: 12,
     }
   },
   body: {
@@ -72,12 +86,12 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row({data}) {
+const Row = ({ data }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
   return (
-    <React.Fragment>
+    <>
       <TableRow className={classes.root}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
@@ -90,13 +104,13 @@ function Row({data}) {
         <TableCell>{data.undelivered.length}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{padding: 0}} colSpan={3}>
+        <TableCell style={{ padding: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
               <Typography className={classes.title} variant="h6" component="div">
                 Undelivered Package(s)
               </Typography>
-              <Table size="small" aria-label="package-details">
+              <Table aria-label="courier-package-details">
                 <TableHead className={`${classes.detailsHeader}`}>
                   <TableRow>
                     <TableCell className={classes.detailsTh}>Tracking No.</TableCell>
@@ -122,39 +136,46 @@ function Row({data}) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
 const generateRows = (courierData) => {
-  
+
   return courierData.map(courier => {
     return courier.undelivered.length > 0 ? (
-      <Row key={`table${courier.courier}`}data={courier} />
-    ) 
-    : 
-    null
+      <Row
+        key={`table${courier.courier}`}
+        data={courier}
+      />
+    )
+      :
+      null
   })
 }
 
-export default function CourierTable({data}) {
+export default function CourierTable({ data }) {
 
   const classes = useTableStyles()
 
   return (
-    <TableContainer className={classes.tableContainer}>
-      <Table stickyHeader aria-label="collapsible table" size='small'>
-        <TableHead >
-          <TableRow style={{backgroundColor: colourTheme.primary.main}}>
-            <StyledTableCell />
-            <StyledTableCell>Courier</StyledTableCell>
-            <StyledTableCell>Packages</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {generateRows(data)}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <Typography variant='body1' className={classes.desc}>Table representing each courier and their assigned packages.</Typography>
+      <TableContainer className={classes.tableContainer}>
+        <Table stickyHeader aria-label="courier-table" size='small'>
+          <TableHead >
+            <TableRow style={{ backgroundColor: colourTheme.primary.main }}>
+              <StyledTableCell />
+              <StyledTableCell>Courier</StyledTableCell>
+              <StyledTableCell>Packages</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {generateRows(data)}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
+
 }

@@ -8,11 +8,11 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const customStyles = makeStyles((theme) => ({
   title: {
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.2em',
-      marginTop: '10px'
+      fontSize: '1em',
+      marginTop: theme.spacing(2),
     }
   },
   input: {
@@ -22,12 +22,17 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     }
   },
+  inputbox: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    }
+  },
 }));
 
 
-const PackageDetailsForm = ({_package, setPackage}) => {
-  
-  const classes = useStyles()
+const PackageDetailsForm = ({ _package, setPackage }) => {
+
+  const customClasses = customStyles()
 
   const maxWeight = 20
 
@@ -35,24 +40,24 @@ const PackageDetailsForm = ({_package, setPackage}) => {
 
     let val = newVal ? newVal : e.target.value
 
-    if(val < 0) val = 0
-    else if(val > maxWeight) val = maxWeight
+    if (val < 0) val = 0
+    else if (val > maxWeight) val = maxWeight
 
     setPackage("weight", val)
   };
 
   return (
     <>
-      <Typography className={classes.title} variant="h6">
+      <Typography className={customClasses.title} variant="h6">
         Package Details
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} >
         <Grid item xs={12} md={9}>
-          <Typography id="package-slider-text" gutterBottom style={{textAlign: 'left', paddingTop: '10px'}}>
-          Package Weight (kg)
+          <Typography id="package-slider-text" gutterBottom style={{ textAlign: 'left', paddingTop: '10px' }}>
+            Package Weight (kg)
           </Typography>
           <Slider
-            className={classes.inputbox}
+            className={customClasses.inputbox}
             aria-labelledby="package-slider"
             max={maxWeight}
             value={_package.weight}
@@ -63,15 +68,15 @@ const PackageDetailsForm = ({_package, setPackage}) => {
         </Grid>
         <Grid item xs={12} sm={3}>
           <OutlinedInput
-            className={classes.inputbox}
+            className={customClasses.inputbox}
             id="manual-weight-input"
             value={_package.weight}
             onChange={handleChange}
             endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
             aria-describedby="weight-manual-input-box"
             labelWidth={0}
-            inputProps = {
-              {className: classes.input}
+            inputProps={
+              { className: customClasses.input }
             }
           />
           <FormHelperText id="weight-manual-input-text">Weight</FormHelperText>

@@ -1,17 +1,21 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+// mui
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField'
-import Input from '@material-ui/core/Input'
-import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
+import Button from '@material-ui/core/Button';
 
+// styles
 import { makeStyles } from '@material-ui/core/styles';
-
 import colourTheme from '../../styles/theme';
+import useStyles from '../../styles/style';
 
-import { patchPackageDeliver } from '../../modules/packageHandler'
+// modules
+import { patchPackageDeliver } from '../../modules/packageHandler';
 
-const useStyles = makeStyles((theme) => ({
+const customStyles = makeStyles((theme) => ({
   root: {
     marginTop: '10px',
   },
@@ -28,33 +32,43 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 0
     }
   },
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
   uploadButton: {
     backgroundColor: colourTheme.button.main,
     '&:hover': {
       backgroundColor: colourTheme.button.hover,
-      color : colourTheme.button.textHover
+      color: colourTheme.button.textHover
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 12,
+      fontSize: '.8rem',
+    }
+  },
+  submitButton: {
+    flex: '1 0 45%',
+    marginLeft: theme.spacing(2),
+    color: 'white',
+    backgroundColor: colourTheme.primary.main,
+    '&:hover': {
+      backgroundColor: colourTheme.primary.hover
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '.8rem',
     }
   },
   upload: {
     flex: '1 0 45%',
   },
   filePreview: {
-    position : 'relative',
+    position: 'relative',
     minHeight: '150px',
     height: '150px',
     maxHeight: '150px',
 
     border: "1px solid lightgray",
     borderRadius: '10px',
+
     marginBottom: theme.spacing(2),
     padding: '10px',
+
     [theme.breakpoints.down('sm')]: {
       height: '100px',
       minHeight: '100px',
@@ -77,18 +91,7 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'center'
     }
   },
-  submitButton: {
-    flex: '1 0 45%',
-    marginLeft: theme.spacing(2),
-    color:'white',
-    backgroundColor: colourTheme.primary.main,
-    '&:hover': {
-      backgroundColor: colourTheme.primary.hover
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 12,
-    }
-  },
+
   subText: {
     [theme.breakpoints.down('sm')]: {
       fontSize: 12,
@@ -97,14 +100,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClose, updateError, updateNotification, removePackageCallback}) => {
-  
-  const classes = useStyles()
+const DeliveryDetails = ({ handleLoadingUpdate, token, trackingnumber, handleClose, updateError, updateNotification, removePackageCallback }) => {
 
-  const [signature, setSignature] = useState(null)
-  const [lat, setLat] = useState(0)
-  const [lng, setLng] = useState(0)
-  const [handedTo, setHandedTo] = useState('')
+  const classes = useStyles();
+  const customClasses = customStyles();
+
+  const [signature, setSignature] = useState(null) // image
+  const [lat, setLat] = useState(0) // lat loc
+  const [lng, setLng] = useState(0) // lng loc
+  const [handedTo, setHandedTo] = useState('') // recp
 
   const sigRef = useRef(null)
 
@@ -116,7 +120,7 @@ const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClos
     fileReader.readAsDataURL(e.target.files[0]);
     fileReader.onload = (e) => {
       setSignature(e.target.result)
-      sigRef.current.src=e.target.result
+      sigRef.current.src = e.target.result
     };
   }
 
@@ -126,8 +130,8 @@ const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClos
     handleLoadingUpdate(true)
 
     // get delivery details
-    const time = (new Date()).getTime() // time of delivery
-    
+    const time = (new Date()).getTime() // time of delivery? - probably do this on the server
+
     const deliveryDetails = {
       time,
       lat,
@@ -139,7 +143,7 @@ const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClos
 
     handleLoadingUpdate(false)
 
-    if(response.err) updateError(response.err)
+    if (response.err) updateError(response.err)
     else {
       console.log(response)
 
@@ -150,7 +154,7 @@ const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClos
       removePackageCallback(trackingnumber);
 
       // set notiifcation
-      const notification = {message:'Package has been delivered', type:'success'}
+      const notification = { message: 'Package has been delivered', type: 'success' }
       updateNotification(notification)
     }
   }
@@ -168,81 +172,80 @@ const DeliveryDetails = ({handleLoadingUpdate, token, trackingnumber, handleClos
 
   useEffect(() => {
     // get location
-    navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, { maximumAge: 0, timeout: 5000});
+    navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, { maximumAge: 0, timeout: 5000 });
   }, [])
 
   return (
-    <>
-      <Grid className={classes.root} container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            className={classes.inputbox}
-            variant="outlined"
-            required
-            fullWidth
-            id="drecpname"
-            name='drecpname'
-            label="Delivery recipient"
-            value={handedTo}
-            onChange={val => setHandedTo(val.target.value)}
-            inputProps = {
-              {className: classes.input}
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography className={classes.subText} id="upload-directive" >
-            Please upload the delivery recipient's signature.
-          </Typography>
-          <div className={classes.filePreview} style={{background: signature}}>
-            {
-              signature ? (
-                <img 
-                  className={classes.sigImage}
-                  ref={sigRef} 
-                  src='#' 
-                  alt='signature'/>
-              )
+    <Grid className={customClasses.root} container spacing={3}>
+      <Grid item xs={12}>
+        <TextField
+          className={customClasses.inputbox}
+          variant="outlined"
+          required
+          fullWidth
+          id="drecpname"
+          name='drecpname'
+          label="Delivery recipient"
+          value={handedTo}
+          onChange={val => setHandedTo(val.target.value)}
+          inputProps={
+            { className: customClasses.input }
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Typography className={customClasses.subText} id="upload-directive" >
+          Please upload the delivery recipient's signature.
+        </Typography>
+        <div className={customClasses.filePreview}>
+          {
+            signature ? (
+              <img
+                className={customClasses.sigImage}
+                ref={sigRef}
+                src='#'
+                alt='signature' />
+            )
               :
               (
-                <Typography id="package-slider-text" className={classes.noFileText}>
-                File preview (requires upload)
+                <Typography id="signature-upload-text" className={customClasses.noFileText}>
+                  File preview (requires upload)
                 </Typography>
-              )  
-            }
-          </div>
-          <Grid className={classes.buttonGroup} item xs={12}>
-            <Input 
-            style={{display: 'none'}} 
-            accept="image/*" 
+              )
+          }
+        </div>
+        <Grid className={classes.linearBtnGroup} item xs={12}>
+          <Input
+            style={{ display: 'none' }}
+            accept="image/*"
             id="signature-upload"
-            type="file" 
+            type="file"
             onChange={handleCapture}
-            />
-            <label className={classes.upload} htmlFor="signature-upload">
-            <Button 
-              fullWidth 
-              variant="contained" 
-              className={classes.uploadButton} 
-              component="span">
+          />
+          <label className={customClasses.upload} htmlFor="signature-upload">
+            <Button
+              fullWidth
+              variant="contained"
+              className={customClasses.uploadButton}
+              component="span"
+            >
               Upload Signature
             </Button>
-            </label>
-            { signature && (
-              <Button 
-              fullWidth 
-              variant="contained" 
-              className={classes.submitButton} 
+          </label>
+          {signature && (
+            <Button
+              fullWidth
+              variant="contained"
+              className={customClasses.submitButton}
               component="span"
               onClick={handleSubmit}
-              >
+            >
               Deliver Package
-              </Button>
-            )}
-          </Grid>
+            </Button>
+          )}
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }
 

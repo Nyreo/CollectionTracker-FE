@@ -8,9 +8,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   title: {
+    marginBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.2em',
-      marginTop: '10px'
+      fontSize: '1em',
+      marginTop: theme.spacing(2),
     }
   },
   input: {
@@ -41,7 +42,7 @@ const AddressForm = ({_package, setPackage}) => {
 
   return (
     <>
-      <Typography className={classes.title} variant="h6" gutterBottom>
+      <Typography className={classes.title} variant="h6">
         Shipping Address
       </Typography>
       <Grid container spacing={3}>
