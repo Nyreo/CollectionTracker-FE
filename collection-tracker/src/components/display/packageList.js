@@ -1,26 +1,37 @@
 import React from 'react';
+import clsx from 'clsx';
+
+// styles
+import useStyles from '../../styles/style';
+
+// custom components
+import PackageItem from './PackageItem';
+
+// mui
+import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 
-import PackageItem from './packageItem';
-import { Typography } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const customStyles = makeStyles((theme) => ({
   root: {
+    overflow: 'auto',
+    flex: '1',
+    display: 'flex',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '10px',
-
-    overflowY: 'scroll',
-    minHeight: '250px',
   },
-  inline: {
-    display: 'inline',
-  },
+  list: {
+    width: '100%',
+    minHeight: '200px',
+  }
 }));
 
 export default function PackageList({packages, displayIcon}) {
+
   const classes = useStyles();
+  const customClasses = customStyles();
 
   const renderPackages = () => {
 
@@ -34,11 +45,11 @@ export default function PackageList({packages, displayIcon}) {
 
     const _packages = []
 
-    packages.forEach(_package => {
+    packages.forEach((_package, index) => {
       _packages.push(
         <div key={`package${_package.trackingNumber}`}>
           <PackageItem data={_package} displayIcon={displayIcon} />
-          <Divider component="li" />
+          { index < packages.length - 1 && (<Divider component="li" />)}
         </div>
       )  
     })
@@ -47,8 +58,8 @@ export default function PackageList({packages, displayIcon}) {
   }
 
   return (
-    <div className={classes.root}>
-      <List >
+    <div className={clsx(customClasses.root, classes.shadow)}>
+      <List className={customClasses.list}>
         {packages && renderPackages()}
       </List>
     </div>

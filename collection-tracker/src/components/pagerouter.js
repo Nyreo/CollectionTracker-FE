@@ -2,13 +2,13 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 // component imports
-import NavBar from './navbar';
+import NavBar from './navbar/Navbar';
 
 // page imports
-import Home from './pages/home';
-import Login from './pages/login';
-import Register from './pages/register';
-import SendPackage from "./pages/sendPackage";
+import Home from './pages/home/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import SendPackage from "./pages/SendPackage";
 
 
 const PageRouter = ({token , saveToken, clearToken, updateNotification}) => {

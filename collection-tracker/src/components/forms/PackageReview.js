@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.2em',
-      marginTop: '10px'
+      fontSize: '1em',
+      marginTop: theme.spacing(2),
     }
   },
 }));

@@ -1,20 +1,31 @@
 import React from 'react';
+
+// styles
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import colourTheme from '../../styles/theme';
 
-import colourTheme from '../../styles/theme'
-
+// mui
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
 import Tooltip from '@material-ui/core/Tooltip';
+import { Typography } from '@material-ui/core';
 
+// mui - icons
 import FlagIcon from '@material-ui/icons/Flag';
 
 const useRowStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      borderBottom: 'unset',
+    },
+    '&:hover': {
+      backgroundColor: 'whitesmoke',
+    },
+  },
   flagged: {
     color: '#E94D4D',
     marginRight: 10,
@@ -24,20 +35,22 @@ const useRowStyles = makeStyles((theme) => ({
       display: 'flex'
     }
   },
+  // mobile
   noMobile: {
     [theme.breakpoints.down('sm')]: {
-      display: "none"
-    }
+      display: 'none',
+    },
   },
   noDesktop: {
-    [theme.breakpoints.up('md')]: {
-      display: "none"
-    }
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
   },
 }));
 
-function Row({data}) {
-  const classes = useRowStyles();
+function Row({ data }) {
+
+  const rowClasses = useRowStyles();
 
   const now = (new Date()).getTime()
   const rawElapsedTime = now - data.date
@@ -49,19 +62,21 @@ function Row({data}) {
   const flagged = elapsedHours >= allowedTime
 
   return (
-    <TableRow className={`${classes.root}`}>
-      <TableCell className={classes.trackingId}>
-      { flagged && (
+    <TableRow className={rowClasses.root}>
+      <TableCell className={rowClasses.trackingId}>
+        {flagged && (
           <Tooltip title="Waiting too long" aria-label="add">
-            <FlagIcon className={classes.flagged}/>
-        </Tooltip>
+            <FlagIcon className={rowClasses.flagged} />
+          </Tooltip>
         )}
-        <span>{data._id}</span>
+        {data._id}
       </TableCell>
-      <TableCell className={classes.noMobile}>
+      {/* long string */}
+      <TableCell className={rowClasses.noMobile}>
         {(new Date(data.date)).toLocaleString()}
       </TableCell>
-      <TableCell className={classes.noDesktop}>
+      {/* short string */}
+      <TableCell className={rowClasses.noDesktop}>
         {(new Date(data.date)).toLocaleDateString()}
       </TableCell>
       <TableCell>
@@ -77,7 +92,7 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.white,
     fontWeight: 700,
     [theme.breakpoints.down('sm')]: {
-      fontSize : 12,
+      fontSize: 12,
       lineHeight: 1,
     }
   }
@@ -93,35 +108,43 @@ const useTableStyles = makeStyles((theme) => ({
       display: "none"
     }
   },
+  desc: {
+    color: 'gray',
+    textAlign: 'left',
+    paddingBottom: theme.spacing(2),
+  }
 }));
 
 const generateRows = (idleData) => {
-  
-  return idleData.map(p => 
-    (
-      <Row key={`idlep.${p._id}`} data={p} />
-    )
+
+  return idleData.map(p =>
+  (
+    <Row key={`idlep.${p._id}`} data={p} />
+  )
   )
 }
 
-export default function IdlePackageTable({data}) {
+export default function IdlePackageTable({ data }) {
 
   const classes = useTableStyles()
 
   return (
-    <TableContainer className={classes.tableContainer}>
-      <Table stickyHeader aria-label="collapsible table" size='small'>
-        <TableHead>
-          <TableRow style={{backgroundColor: colourTheme.primary.main}}>
-            <StyledTableCell>Tracking No.</StyledTableCell>
-            <StyledTableCell>Date Posted</StyledTableCell>
-            <StyledTableCell>Hours Elapsed</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {generateRows(data)}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <Typography variant='body1' className={classes.desc}>Table representing idle packages (not assigned to a driver).</Typography>
+      <TableContainer className={classes.tableContainer}>
+        <Table stickyHeader aria-label="collapsible table" size='small'>
+          <TableHead>
+            <TableRow style={{ backgroundColor: colourTheme.primary.main }}>
+              <StyledTableCell>Tracking No.</StyledTableCell>
+              <StyledTableCell>Date Posted</StyledTableCell>
+              <StyledTableCell>Hours Elapsed</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {generateRows(data)}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }

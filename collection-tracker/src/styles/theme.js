@@ -1,12 +1,12 @@
 
 const colourTheme = {
   primary: {
-    main: 'rgb(116, 0, 184)',
-    hover: 'rgb(105, 48, 195)'
+    main: 'rgb(114, 9, 183)',
+    hover: 'rgb(133, 11, 214)'
   },
   secondary: {
-    main: 'rgb(83, 144, 217)',
-    hover: 'rgb(78, 168, 222)'
+    main: 'rgb(247, 37, 133)',
+    hover: 'rgb(250, 66, 149)'
   },
   text: {
     main: 'whitesmoke',

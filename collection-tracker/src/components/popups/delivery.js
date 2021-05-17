@@ -1,16 +1,23 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+
+//mui
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+// mui-icons
 import CloseIcon from '@material-ui/icons/Close';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+// styles
 import { makeStyles } from '@material-ui/core/styles';
 
-import DeliveryDetails from '../forms/deliveryDetails';
+// custom components
+import DeliveryDetails from '../forms/DeliveryDetails';
+import { Typography } from '@material-ui/core';
+import colourTheme from '../../styles/theme';
 
-const useStyles = makeStyles((theme) => ({
+const customStyles = makeStyles((theme) => ({
   root: {
     position: 'relative'
   },
@@ -29,13 +36,19 @@ const useStyles = makeStyles((theme) => ({
       left: '42.5%',
       top: '42.5%',
     }
+  },
+  trackingNumber: {
+    backgroundColor: colourTheme.primary.main,
+    borderRadius: '5px',
+    color: colourTheme.text.main,
+    padding: theme.spacing(1),
   }
 }));
 
 
-export default function DeliveryDialog({removePackageCallback, open, setOpen, trackingnumber, token, updateError, updateNotification}) {
+export default function DeliveryDialog({ removePackageCallback, open, setOpen, trackingnumber, token, updateError, updateNotification }) {
 
-  const classes = useStyles()
+  const customClasses = customStyles()
 
   const [loading, setLoading] = useState(false);
 
@@ -47,22 +60,25 @@ export default function DeliveryDialog({removePackageCallback, open, setOpen, tr
 
   return (
     <div>
-      <Dialog className={classes.root} open={open} onClose={handleClose} aria-labelledby="delivery-dialog-title">
-        <CloseIcon className={classes.close} onClick={handleClose}/>
+      <Dialog className={customClasses.root} open={open} onClose={handleClose} aria-labelledby="delivery-dialog-title">
+        <CloseIcon className={customClasses.close} onClick={handleClose} />
         <DialogTitle id="delivery-dialog-title">Making a delivery.</DialogTitle>
         <DialogContent>
-          Delivery details for: {trackingnumber}
+          <Typography variant="body1" className={customClasses.trackingNumber}>
+            Parcel ID: <b>{trackingnumber}</b>
+          </Typography>
+
         </DialogContent>
-        { loading && (
-          <DialogContent style={{textAlign: 'center'}}>
-            <CircularProgress className={classes.loading}/>
+        {loading && (
+          <DialogContent style={{ textAlign: 'center' }}>
+            <CircularProgress className={customClasses.loading} />
           </DialogContent>
         )}
-        <DialogContent style={{overflowY: 'hidden', marginBottom: '2em'}}>
-          <DeliveryDetails 
-            token={token} 
-            trackingnumber={trackingnumber} 
-            handleClose={handleClose} 
+        <DialogContent style={{ overflowY: 'hidden', marginBottom: '2em' }}>
+          <DeliveryDetails
+            token={token}
+            trackingnumber={trackingnumber}
+            handleClose={handleClose}
             updateError={updateError}
             updateNotification={updateNotification}
             removePackageCallback={removePackageCallback}

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth : '25%',
     minHeight: '50%',
 
-    boxShadow: '2px 2px solid black',
+    boxShadow: '7px 7px 5px 0px rgba(0,0,0,0.22)',
     paddingBottom: "20px",
     [theme.breakpoints.down('sm')]: {
       width:'80%',
