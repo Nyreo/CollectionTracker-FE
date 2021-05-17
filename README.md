@@ -1,9 +1,8 @@
+
 # Collection Tracker Frontend
 Front-end repository for Joseph Mitchell's M137CEM Coursework Submission.
 
-## Live Project
-
-https://mitch137-collectiotracking-fe.herokuapp.com/
+![Homepage](https://i.ibb.co/sm7g3Tp/homepage.png)
 
 ## Description
 
@@ -56,7 +55,7 @@ The parcel details now appear on the courier's homepage but only for the parcels
 
 ---
 
-### Stage 2 [complete]
+## Stage 2 [complete]
 
 Now lets complete the delivery process.
 
@@ -73,7 +72,7 @@ In addition to the data entered by the courier, the system should automatically 
 
 ---
 
- ### Stage 3 [complete]
+ ## Stage 3 [complete]
  
  You are required to build a series of tracking pages so that:
  
